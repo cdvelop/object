@@ -90,7 +90,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 	for prueba, data := range dataTest {
 		t.Run((prueba), func(t *testing.T) {
 
-			resp, err := object.New(data.model_struct, inputs, module)
+			err := object.New(data.model_struct, inputs, module)
 
 			if err != nil {
 
@@ -99,6 +99,15 @@ func TestBuildObjectFromStruct(t *testing.T) {
 				}
 
 			} else {
+
+				var resp *model.Object
+
+				for _, o := range module.Objects {
+					if o.Name == data.expected.Name {
+						resp = o
+						break
+					}
+				}
 
 				if !object.AreIdentical(resp, data.expected) {
 

@@ -7,10 +7,10 @@ import (
 )
 
 // arguments: main struct and *model.Module. optional: []*model.Input
-func New(model_structs ...interface{}) (*model.Object, error) {
+func New(model_structs ...interface{}) error {
 
 	if len(model_structs) < 2 {
-		return nil, model.Error("error tienes que ingresar mínimo una estructura y un puntero de *model.Module como argumentos.")
+		return model.Error("error tienes que ingresar mínimo una estructura y un puntero de *model.Module como argumentos.")
 	}
 
 	var inputs_found []*model.Input
@@ -56,22 +56,26 @@ func New(model_structs ...interface{}) (*model.Object, error) {
 			}
 
 		default:
-			return nil, model.Error("error tipo:", t.Kind().String(), ". no implementado.")
+			return model.Error("error tipo:", t.Kind().String(), ". no implementado.")
 		}
 	}
 
 	if main_struct == nil {
-		return nil, model.Error("error estructura principal no ingresada (verifica si los campos tiene el tag 'Legend')")
+		return model.Error("error estructura principal no ingresada (verifica si los campos tiene el tag 'Legend')")
+	}
+
+	if module == nil {
+		return model.Error("error puntero de *model.Module no ingresado como argumento")
 	}
 
 	new_fields, TextFieldNames, err := buildFieldsObject(main_struct, inputs_found...)
 	if err != nil {
 		if main_struct.NumField() != 0 {
-			return nil, model.Error(err.Error())
+			return model.Error(err.Error())
 		}
 	}
 
-	new_object := model.Object{
+	new_object := &model.Object{
 		Name:            main_struct.Name(),
 		TextFieldNames:  TextFieldNames,
 		Fields:          new_fields,
@@ -80,9 +84,11 @@ func New(model_structs ...interface{}) (*model.Object, error) {
 		FrontendHandler: model.FrontendHandler{},
 	}
 
-	addFrontHandlers(&new_object, new_struct)
+	addFrontHandlers(new_object, new_struct)
 
-	addBackHandlers(&new_object, new_struct)
+	addBackHandlers(new_object, new_struct)
 
-	return &new_object, nil
+	module.Objects = append(module.Objects, new_object)
+
+	return nil
 }
