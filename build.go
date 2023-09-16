@@ -6,6 +6,11 @@ import (
 	"github.com/cdvelop/model"
 )
 
+type structFound struct {
+	struct_int interface{}
+	struct_ref reflect.Type
+}
+
 // arguments: main struct and *model.Module. optional: []*model.Input
 func New(model_structs ...interface{}) error {
 
@@ -15,8 +20,8 @@ func New(model_structs ...interface{}) error {
 
 	var inputs_found []*model.Input
 
-	var main_struct reflect.Type
-	var new_struct interface{}
+	var structs_found []structFound
+
 	var module *model.Module
 
 	for _, m := range model_structs {
@@ -29,19 +34,32 @@ func New(model_structs ...interface{}) error {
 
 		case reflect.Struct:
 
-			if isTheMainStructure(t) {
-				main_struct = t
-				new_struct = m
-			}
+			structs_found = append(structs_found, structFound{
+				struct_int: m,
+				struct_ref: t,
+			})
 
 		case reflect.Slice:
 			// fmt.Println("Slice ")
 			sliceValue := reflect.ValueOf(m)
 			for i := 0; i < sliceValue.Len(); i++ {
 				// fmt.Println("VALOR", sliceValue.Index(i))
+
 				item := sliceValue.Index(i).Interface()
+
+				// Verifica si el elemento es una estructura
+				// if reflect.TypeOf(item).Kind() == reflect.Struct {
+				// 	// El elemento es una estructura
+				// 	structs_found = append(structs_found, structFound{
+				// 		struct_int: item,
+				// 		struct_ref: reflect.TypeOf(item),
+				// 	})
+				// }
+
+				// Verifica si el elemento es de tipo *model.Input
 				if input_item, ok := item.(*model.Input); ok {
 					inputs_found = append(inputs_found, input_item)
+
 				}
 			}
 
@@ -60,35 +78,39 @@ func New(model_structs ...interface{}) error {
 		}
 	}
 
-	if main_struct == nil {
-		return model.Error("error estructura principal no ingresada (verifica si los campos tiene el tag 'Legend')")
+	if len(structs_found) == 0 {
+		return model.Error("error ninguna estructura valida ingresada")
 	}
 
 	if module == nil {
 		return model.Error("error puntero de *model.Module no ingresado como argumento")
 	}
 
-	new_fields, TextFieldNames, err := buildFieldsObject(main_struct, inputs_found...)
-	if err != nil {
-		if main_struct.NumField() != 0 {
-			return model.Error(err.Error())
+	for _, sf := range structs_found {
+
+		new_fields, TextFieldNames, err := buildFieldsObject(sf.struct_ref, inputs_found...)
+		if err != nil {
+			if sf.struct_ref.NumField() != 0 {
+				return model.Error(err.Error())
+			}
 		}
+
+		new_object := &model.Object{
+			Name:            sf.struct_ref.Name(),
+			TextFieldNames:  TextFieldNames,
+			Fields:          new_fields,
+			Module:          module,
+			BackendHandler:  model.BackendHandler{},
+			FrontendHandler: model.FrontendHandler{},
+		}
+
+		addFrontHandlers(new_object, sf.struct_int)
+
+		addBackHandlers(new_object, sf.struct_int)
+
+		module.Objects = append(module.Objects, new_object)
+
 	}
-
-	new_object := &model.Object{
-		Name:            main_struct.Name(),
-		TextFieldNames:  TextFieldNames,
-		Fields:          new_fields,
-		Module:          module,
-		BackendHandler:  model.BackendHandler{},
-		FrontendHandler: model.FrontendHandler{},
-	}
-
-	addFrontHandlers(new_object, new_struct)
-
-	addBackHandlers(new_object, new_struct)
-
-	module.Objects = append(module.Objects, new_object)
 
 	return nil
 }
