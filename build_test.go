@@ -12,7 +12,7 @@ import (
 
 type person struct {
 	no_include string // campos sin etiqueta Legend no se incluyen en el objeto
-	name       string `Legend:"Nombre" NotRenderHtml:"true" Input:"TextOnly" TextField:"ok"`
+	name       string `Legend:"Nombre" NotRenderHtml:"true" TextField:"1" Input:"TextOnly" `
 	age        int    `Legend:"Edad" Encrypted:"true" Input:"Number"`
 	address    int    `Legend:"Dirección" Input:"Text"`
 }
