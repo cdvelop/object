@@ -14,7 +14,7 @@ type person struct {
 	no_include string // campos sin etiqueta Legend no se incluyen en el objeto
 	name       string `Legend:"Nombre" NotRenderHtml:"true" TextField:"1" Input:"TextOnly" `
 	age        int    `Legend:"Edad" Encrypted:"true" Input:"Number"`
-	address    int    `Legend:"Dirección" Input:"Text"`
+	Address    string `Legend:"Dirección" Input:"Text"`
 }
 
 func (person) SetObjectInDomAfterDelete(data ...map[string]string) (container_id, tags string) {
@@ -37,11 +37,22 @@ func (staff) Delete(data ...map[string]string) (out []map[string]string, err err
 	return
 }
 
+type product struct {
+	Object *model.Object
+	name   string
+}
+
+type stock struct {
+	Object *model.Object
+	id     string
+}
+
 func TestBuildObjectFromStruct(t *testing.T) {
 
-	module_one := &model.Module{ModuleName: "module_one"}
-	module_three := &model.Module{ModuleName: "module_three"}
-	module_four := &model.Module{ModuleName: "module_four"}
+	mod_one := &model.Module{ModuleName: "mod_one"}
+	mod_three := &model.Module{ModuleName: "mod_three"}
+	mod_four := &model.Module{ModuleName: "mod_four"}
+	mod_five := &model.Module{ModuleName: "mod_five"}
 
 	inputs := []*model.Input{
 		input.Text(),
@@ -49,7 +60,21 @@ func TestBuildObjectFromStruct(t *testing.T) {
 		input.TextOnly(),
 	}
 
-	new_staff := staff{}
+	new_person := &person{}
+
+	new_staff3 := &staff{}
+	new_user4 := &user{}
+	new_staff4 := &staff{}
+
+	new_product := product{
+		Object: nil,
+		name:   "",
+	}
+
+	new_stock := stock{
+		Object: nil,
+		id:     "",
+	}
 
 	dataTest := map[string]struct {
 		module       *model.Module
@@ -58,11 +83,12 @@ func TestBuildObjectFromStruct(t *testing.T) {
 		err          string
 	}{
 		"1- estructura person expected_object1 solo con handlers front back delete": {
-			module:       module_one,
-			model_struct: []interface{}{person{}},
+			module:       mod_one,
+			model_struct: []interface{}{new_person},
 			expected: []*model.Object{
 				{
-					Name:           "person",
+					Name:           mod_one.ModuleName + ".person",
+					Table:          "person",
 					TextFieldNames: []string{"name"},
 					Fields: []model.Field{
 						// {Name: "FullName", Legend: "Nombre"},
@@ -70,14 +96,14 @@ func TestBuildObjectFromStruct(t *testing.T) {
 						{Name: "age", Legend: "Edad", Encrypted: true, Input: input.Number()},
 						{Name: "address", Legend: "Dirección", Input: input.Text()},
 					},
-					Module:          module_one,
-					BackendHandler:  model.BackendHandler{DeleteApi: person{}},
-					FrontendHandler: model.FrontendHandler{AfterDelete: person{}},
+					Module:          mod_one,
+					BackendHandler:  model.BackendHandler{DeleteApi: new_person},
+					FrontendHandler: model.FrontendHandler{AfterDelete: new_person},
 				},
 			},
 			err: "",
 		},
-		"2- estructura user solo un campo sin modulo se espera error": {
+		"2- estructura user solo un campo sin modulo ni estructura como puntero se espera error": {
 			module:       nil,
 			model_struct: []interface{}{user{}},
 			expected: []*model.Object{
@@ -85,32 +111,52 @@ func TestBuildObjectFromStruct(t *testing.T) {
 					Name: "user",
 				},
 			},
-			err: "error puntero de *model.Module no ingresado como argumento",
+			err: "error debes de ingresar las estructuras como  punteros.",
 		},
 		"3- estructura staff ya inicializada, un campo, sin tags, modulo y 1 handler front se espera ok": {
-			module:       module_three,
-			model_struct: []interface{}{new_staff},
+			module:       mod_three,
+			model_struct: []interface{}{new_staff3},
 			expected: []*model.Object{
 				{
-					Name:           "staff",
-					Module:         module_three,
-					BackendHandler: model.BackendHandler{DeleteApi: new_staff},
+					Name:           mod_three.ModuleName + ".staff",
+					Table:          "staff",
+					Module:         mod_three,
+					BackendHandler: model.BackendHandler{DeleteApi: new_staff3},
 				},
 			},
 			err: "",
 		},
 		"4- ingreso de 2 estructuras staff y user solo un campo con modulo se espera ok": {
-			module:       module_four,
-			model_struct: []interface{}{staff{}, user{}},
+			module:       mod_four,
+			model_struct: []interface{}{new_staff4, new_user4},
 			expected: []*model.Object{
 				{
-					Name:           "staff",
-					Module:         module_four,
-					BackendHandler: model.BackendHandler{DeleteApi: staff{}},
+					Name:           mod_four.ModuleName + ".staff",
+					Table:          "staff",
+					Module:         mod_four,
+					BackendHandler: model.BackendHandler{DeleteApi: new_staff4},
 				},
 				{
-					Name:   "user",
-					Module: module_four,
+					Name:   mod_four.ModuleName + ".user",
+					Table:  "user",
+					Module: mod_four,
+				},
+			},
+			err: "",
+		},
+		"5- 2 estructuras product y stock como punteros se espera agregar el puntero del objeto a cada una de ellas": {
+			module:       mod_five,
+			model_struct: []interface{}{&new_product, &new_stock},
+			expected: []*model.Object{
+				{
+					Name:   mod_five.ModuleName + ".product",
+					Table:  "product",
+					Module: mod_five,
+				},
+				{
+					Name:   mod_five.ModuleName + ".stock",
+					Table:  "stock",
+					Module: mod_five,
 				},
 			},
 			err: "",
@@ -129,7 +175,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 			err := object.New(new_data...)
 			if err != nil {
 				if data.err != err.Error() {
-					log.Fatalf("\n-se esperaba:\n%v\n-pero se obtuvo:\n%v\n", data.err, err.Error())
+					log.Fatalf("\n-no se esperaba error pero se obtuvo:\n%v\n", err.Error())
 				}
 			} else {
 
@@ -144,25 +190,34 @@ func TestBuildObjectFromStruct(t *testing.T) {
 					log.Fatal()
 				}
 
-				for _, obj_expected := range data.expected {
+				for i, obj_expected := range data.expected {
 
-					for _, obj_resp := range data.module.Objects {
+					obj_resp := data.module.Objects[i]
 
-						if obj_resp.Name == obj_expected.Name {
+					if !object.AreIdentical(obj_resp, obj_expected) {
 
-							if !object.AreIdentical(obj_resp, obj_expected) {
+						fmt.Println(prueba)
+						fmt.Printf("\n-se esperaba:\n%v\n\n-pero se obtuvo:\n%v\n", obj_expected, obj_resp)
 
-								fmt.Println(prueba)
-								fmt.Printf("\n-se esperaba:\n%v\n\n-pero se obtuvo:\n%v\n", obj_expected, obj_resp)
-
-								log.Fatalln()
-							}
-
-							break
-						}
+						log.Fatalln()
 					}
+
 				}
 			}
 		})
 	}
+
+	if new_product.Object == nil {
+		log.Fatalln("se esperaba puntero valido de objeto en estructura product")
+	}
+
+	if new_stock.Object == nil {
+		log.Fatalln("se esperaba puntero valido de objeto en estructura stock")
+	}
+
+	if new_person.Address != "address" {
+		log.Fatalln("se esperaba que el campo Address en estructura person fuera ahora en minúscula")
+
+	}
+
 }

@@ -2,58 +2,90 @@ package object
 
 import (
 	"reflect"
-	"strconv"
 
 	"github.com/cdvelop/model"
 )
 
-func buildFieldsObject(t reflect.Type, inputs ...*model.Input) (fields []model.Field, TextFieldNames []string, err error) {
+func (sf structFound) setStructField(o *model.Object, inputs ...*model.Input) error {
 
-	field_names := getModelFieldNames()
+	// Crear una instancia vacía del tipo subyacente
+	structValue := reflect.New(sf.struct_ref).Elem()
 
-	for i := 0; i < t.NumField(); i++ {
-		field := t.Field(i)
-		var add_field bool
+	for i := 0; i < structValue.NumField(); i++ {
+		field := structValue.Field(i)
+		fieldType := field.Type()
 
-		new_field := model.Field{
-			Name: field.Name,
-		}
+		name_value := sf.struct_ref.Field(i).Name
 
-		// Leer las etiquetas de cada campo y completar el new_field
-		for _, name := range field_names {
+		// fmt.Println("VALOR NOMBRE:", name_value)
 
-			// fmt.Println("ETIQUETA:", tag)
+		// Verificar si el campo "Object" existe en la estructura
+		if name_value == "Object" && fieldType == reflect.TypeOf((*model.Object)(nil)) {
+			field.Set(reflect.ValueOf(o)) // Asignar el campo "Object" en la estructura
+		} else {
 
-			value := field.Tag.Get(name)
+			// primera letra en minúscula
+			if newChar, ok := valid_letters[name_value[0]]; ok {
 
-			if name == "Legend" && value != "" {
-				add_field = true
-			}
+				name_value = string(newChar) + name_value[1:]
 
-			if value != "" {
-				// fmt.Printf("Campo: %s, Etiqueta: %s, Valor: %s\n", field.Name, tag, value)
-				// fmt.Printf("TIPO: %s\n", typ)
-
-				// fmt.Println("INGRESAR INPUTS AQUI")
-				err := setFieldFromTags(&new_field, value, name, inputs...)
-				if err != nil {
-					return nil, nil, err
+				// Verificar si el campo es de tipo string
+				if fieldType.Kind() == reflect.String {
+					// Asignar el nombre del campo como valor
+					field.SetString(name_value)
 				}
+
 			}
-		}
+			// Obtener y mostrar el valor de la etiqueta del campo
+			fieldTag := sf.struct_ref.Field(i).Tag
 
-		// verificamos si contiene el campo la etiqueta TextField
-		if field.Tag.Get("TextField") != "" {
-			TextFieldNames = append(TextFieldNames, field.Name)
-		}
+			err := addObjectFields(o, name_value, fieldTag, inputs...)
+			if err != nil {
+				return err
+			}
 
-		if add_field {
-			fields = append(fields, new_field)
 		}
 
 	}
 
-	return
+	// Obtener una referencia a la interfaz original
+	interfaceValue := reflect.ValueOf(sf.struct_int)
+
+	// Actualizar el valor en la interfaz con la estructura modificada
+	interfaceValue.Elem().Set(structValue)
+
+	return nil
+}
+
+func addObjectFields(o *model.Object, name_value string, fieldTag reflect.StructTag, inputs ...*model.Input) error {
+	new_field := model.Field{
+		Name: name_value,
+	}
+
+	var add_field bool
+
+	for _, name := range getModelFieldNames() {
+		value := fieldTag.Get(name)
+		if value != "" {
+			err := setFieldFromTags(&new_field, value, name, inputs...)
+			if err != nil {
+				return err
+			}
+
+			add_field = true
+		}
+	}
+
+	if fieldTag.Get("TextField") != "" {
+		add_field = true
+		o.TextFieldNames = append(o.TextFieldNames, name_value)
+	}
+
+	if add_field {
+		o.Fields = append(o.Fields, new_field)
+	}
+
+	return nil
 }
 
 func getModelFieldNames() (names []string) {
@@ -66,72 +98,8 @@ func getModelFieldNames() (names []string) {
 	return
 }
 
-func setFieldFromTags(obj, value interface{}, tag_name string, inputs ...*model.Input) error {
-	// Obtener el valor reflect.Value de obj
-	val := reflect.ValueOf(obj).Elem()
-
-	// Obtener el campo por su nombre
-	field := val.FieldByName(tag_name)
-
-	field_type := field.Type().String()
-
-	var value_in string
-
-	// Verificar si el campo existe y es exportado
-	if !field.IsValid() || !field.CanSet() {
-		return model.Error("Campo", tag_name, "no encontrado o no se puede modificar")
-	}
-
-	switch field_type {
-	case "string":
-		if valueType, ok := value.(string); ok {
-			field.SetString(valueType)
-			return nil
-		}
-
-	case "int":
-		if valueType, ok := value.(int); ok {
-			field.SetInt(int64(valueType))
-			return nil
-		}
-
-	case "bool":
-		var bool_value, ok bool
-		var err error
-		if bool_value, ok = value.(bool); ok {
-
-		} else {
-			if bool_string, ok := value.(string); ok {
-				// fmt.Println("ES STRING NO BOOL", bool_string, tag_name)
-				bool_value, err = strconv.ParseBool(bool_string)
-			}
-		}
-
-		if err == nil {
-			field.SetBool(bool_value)
-			return nil
-		}
-
-	case "*model.Input":
-
-		if tag_name == "Input" {
-			value_in = value.(string)
-			// fmt.Println("tag_name", tag_name, "TIPO", field_type)
-			// fmt.Println("value_in", value_in)
-			for _, mod := range inputs {
-				// fmt.Println("MODEL INPUT:", mod.InputName)
-				if value_in == mod.InputName {
-					// Crear un reflect.Value para el puntero
-					ptrValue := reflect.ValueOf(mod)
-					// Asignar el valor del puntero al campo
-					field.Set(ptrValue)
-					return nil
-				}
-			}
-		}
-	default:
-
-	}
-
-	return model.Error("error etiqueta:", tag_name, ":", value_in, "Tipo:", field_type, ", no soportada")
+var valid_letters = map[byte]byte{
+	'A': 'a', 'B': 'b', 'C': 'c', 'D': 'd', 'E': 'e', 'F': 'f', 'G': 'g', 'H': 'h', 'I': 'i',
+	'J': 'j', 'K': 'k', 'L': 'l', 'M': 'm', 'N': 'n', 'O': 'o', 'P': 'p', 'Q': 'q', 'R': 'r',
+	'S': 's', 'T': 't', 'U': 'u', 'V': 'v', 'W': 'w', 'X': 'x', 'Y': 'y', 'Z': 'z',
 }

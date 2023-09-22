@@ -34,10 +34,7 @@ func New(model_structs ...interface{}) error {
 
 		case reflect.Struct:
 
-			structs_found = append(structs_found, structFound{
-				struct_int: m,
-				struct_ref: t,
-			})
+			return model.Error("error debes de ingresar las estructuras como  punteros.")
 
 		case reflect.Slice:
 			// fmt.Println("Slice ")
@@ -64,13 +61,28 @@ func New(model_structs ...interface{}) error {
 			}
 
 		case reflect.Ptr:
-			// fmt.Println("PUNTERO:", t.Name())
 
 			module_value := reflect.ValueOf(m).Interface()
 
 			if module_pointer, ok := module_value.(*model.Module); ok {
 				// fmt.Println("ESTRUCTURA ES UN PUNTERO MODULO: ", module_pointer)
 				module = module_pointer
+			} else {
+				// puede que se enviaron las estructuras principales como punteros
+
+				// Obtén el tipo subyacente al puntero
+				elem_type := t.Elem()
+
+				// Verifica si el tipo subyacente es una estructura
+				if elem_type.Kind() == reflect.Struct {
+					// fmt.Println("El puntero es de tipo estructura válida:", t.Name())
+					structs_found = append(structs_found, structFound{
+						struct_int: m,
+						struct_ref: elem_type,
+					})
+
+				}
+
 			}
 
 		default:
@@ -88,27 +100,24 @@ func New(model_structs ...interface{}) error {
 
 	for _, sf := range structs_found {
 
-		new_fields, TextFieldNames, err := buildFieldsObject(sf.struct_ref, inputs_found...)
-		if err != nil {
-			if sf.struct_ref.NumField() != 0 {
-				return model.Error(err.Error())
-			}
-		}
-
-		new_object := &model.Object{
-			Name:            sf.struct_ref.Name(),
-			TextFieldNames:  TextFieldNames,
-			Fields:          new_fields,
+		new_object := model.Object{
+			Name:            module.ModuleName + "." + sf.struct_ref.Name(),
+			Table:           sf.struct_ref.Name(),
 			Module:          module,
 			BackendHandler:  model.BackendHandler{},
 			FrontendHandler: model.FrontendHandler{},
 		}
 
-		addFrontHandlers(new_object, sf.struct_int)
+		err := sf.setStructField(&new_object, inputs_found...)
+		if err != nil {
+			return model.Error(err.Error())
+		}
 
-		addBackHandlers(new_object, sf.struct_int)
+		addFrontHandlers(&new_object, sf.struct_int)
 
-		module.Objects = append(module.Objects, new_object)
+		addBackHandlers(&new_object, sf.struct_int)
+
+		module.Objects = append(module.Objects, &new_object)
 
 	}
 

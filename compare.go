@@ -8,6 +8,9 @@ import (
 
 func AreIdentical(obj1, obj2 *model.Object) bool {
 
+	// fmt.Println("OBJETO 1", obj1.Name)
+	// fmt.Println("OBJETO 2", obj2.Name)
+
 	if obj1.Name != obj2.Name || len(obj1.Fields) != len(obj2.Fields) {
 		return false
 	}
@@ -30,6 +33,6 @@ func AreIdentical(obj1, obj2 *model.Object) bool {
 		return false
 	}
 
-	return obj1.Module == obj2.Module
+	return reflect.DeepEqual(obj1, obj2)
 
 }
