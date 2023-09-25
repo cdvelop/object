@@ -43,7 +43,6 @@ func (sf structFound) setStructField(o *model.Object, inputs ...*model.Input) er
 			if err != nil {
 				return err
 			}
-
 		}
 
 	}
