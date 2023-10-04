@@ -21,7 +21,7 @@ func AreIdentical(obj1, obj2 *model.Object) bool {
 		}
 	}
 
-	if len(obj1.TextFieldNames) != len(obj2.TextFieldNames) {
+	if len(obj1.NamePrincipalFields) != len(obj2.NamePrincipalFields) {
 		return false
 	}
 

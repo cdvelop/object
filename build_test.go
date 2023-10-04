@@ -12,15 +12,16 @@ import (
 
 type person struct {
 	no_include string // campos sin etiqueta Legend no se incluyen en el objeto
-	name       string `Legend:"Nombre" NotRenderHtml:"true" TextField:"1" Input:"TextOnly" `
+	name       string `Legend:"Nombre" NotRenderHtml:"true" PrincipalField:"1" Input:"TextOnly" `
 	age        int    `Legend:"Edad" Encrypted:"true" Input:"Number"`
 	Address    string `Legend:"Dirección" Input:"Text"`
+	Cars       string `Legend:"Vehículos" Input:"Text" SourceTable:"cars"`
 }
 
-func (person) SetObjectInDomAfterDelete(data ...map[string]string) (container_id, tags string) {
+func (person) SetObjectInDomAfterDelete(data ...map[string]string) (err error) {
 	return
 }
-func (person) Delete(data ...map[string]string) (out []map[string]string, err error) {
+func (person) Delete(u *model.User, data ...map[string]string) (out []map[string]string, err error) {
 	return
 }
 
@@ -33,7 +34,7 @@ type staff struct {
 	other *model.Field
 }
 
-func (staff) Delete(data ...map[string]string) (out []map[string]string, err error) {
+func (staff) Delete(u *model.User, data ...map[string]string) (out []map[string]string, err error) {
 	return
 }
 
@@ -87,14 +88,15 @@ func TestBuildObjectFromStruct(t *testing.T) {
 			model_struct: []interface{}{new_person},
 			expected: []*model.Object{
 				{
-					Name:           mod_one.ModuleName + ".person",
-					Table:          "person",
-					TextFieldNames: []string{"name"},
+					Name:                mod_one.ModuleName + ".person",
+					Table:               "person",
+					NamePrincipalFields: []string{"name"},
 					Fields: []model.Field{
 						// {Name: "FullName", Legend: "Nombre"},
 						{Name: "name", Legend: "Nombre", NotRenderHtml: true, Input: input.TextOnly()},
 						{Name: "age", Legend: "Edad", Encrypted: true, Input: input.Number()},
 						{Name: "address", Legend: "Dirección", Input: input.Text()},
+						{Name: "cars", Legend: "Vehículos", Input: input.Text(), SourceTable: "cars"},
 					},
 					Module:          mod_one,
 					BackendHandler:  model.BackendHandler{DeleteApi: new_person},

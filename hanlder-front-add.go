@@ -19,4 +19,12 @@ func addFrontHandlers(o *model.Object, new_struct interface{}) {
 		o.AfterDelete = new_struct.(model.AfterDelete)
 	}
 
+	if _, ok := new_struct.(model.NotifyBootData); ok {
+		o.NotifyBootData = new_struct.(model.NotifyBootData)
+	}
+
+	if _, ok := new_struct.(model.ViewHandler); ok {
+		o.ViewHandler = new_struct.(model.ViewHandler)
+	}
+
 }

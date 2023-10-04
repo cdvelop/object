@@ -75,9 +75,9 @@ func addObjectFields(o *model.Object, name_value string, fieldTag reflect.Struct
 		}
 	}
 
-	if fieldTag.Get("TextField") != "" {
+	if fieldTag.Get("PrincipalField") != "" {
 		add_field = true
-		o.TextFieldNames = append(o.TextFieldNames, name_value)
+		o.NamePrincipalFields = append(o.NamePrincipalFields, name_value)
 	}
 
 	if add_field {
