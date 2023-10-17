@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/cdvelop/input v0.0.34
-	github.com/cdvelop/model v0.0.54
+	github.com/cdvelop/model v0.0.55
 	github.com/cdvelop/unixid v0.0.2
 )
 
