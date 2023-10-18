@@ -4,6 +4,7 @@ import (
 	"reflect"
 
 	"github.com/cdvelop/model"
+	"github.com/cdvelop/strings"
 )
 
 type structFound struct {
@@ -17,8 +18,6 @@ func New(model_structs ...interface{}) error {
 	if len(model_structs) < 2 {
 		return model.Error("error tienes que ingresar mínimo una estructura y un puntero de *model.Module como argumentos.")
 	}
-
-	var inputs_found []*model.Input
 
 	var structs_found []structFound
 
@@ -38,27 +37,27 @@ func New(model_structs ...interface{}) error {
 
 		case reflect.Slice:
 			// fmt.Println("Slice ")
-			sliceValue := reflect.ValueOf(m)
-			for i := 0; i < sliceValue.Len(); i++ {
-				// fmt.Println("VALOR", sliceValue.Index(i))
+			// sliceValue := reflect.ValueOf(m)
+			// for i := 0; i < sliceValue.Len(); i++ {
+			// fmt.Println("VALOR", sliceValue.Index(i))
 
-				item := sliceValue.Index(i).Interface()
+			// item := sliceValue.Index(i).Interface()
 
-				// Verifica si el elemento es una estructura
-				// if reflect.TypeOf(item).Kind() == reflect.Struct {
-				// 	// El elemento es una estructura
-				// 	structs_found = append(structs_found, structFound{
-				// 		struct_int: item,
-				// 		struct_ref: reflect.TypeOf(item),
-				// 	})
-				// }
+			// Verifica si el elemento es una estructura
+			// if reflect.TypeOf(item).Kind() == reflect.Struct {
+			// 	// El elemento es una estructura
+			// 	structs_found = append(structs_found, structFound{
+			// 		struct_int: item,
+			// 		struct_ref: reflect.TypeOf(item),
+			// 	})
+			// }
 
-				// Verifica si el elemento es de tipo *model.Input
-				if input_item, ok := item.(*model.Input); ok {
-					inputs_found = append(inputs_found, input_item)
+			// Verifica si el elemento es de tipo *model.Input
+			// if input_item, ok := item.(*model.Input); ok {
+			// 	inputs_found = append(inputs_found, input_item)
 
-				}
-			}
+			// }
+			// }
 
 		case reflect.Ptr:
 
@@ -100,15 +99,17 @@ func New(model_structs ...interface{}) error {
 
 	for _, sf := range structs_found {
 
+		obj_name := strings.ToLowerCaseAlphabet(sf.struct_ref.Name())
+
 		new_object := model.Object{
-			Name:            module.ModuleName + "." + sf.struct_ref.Name(),
+			Name:            module.ModuleName + "." + obj_name,
 			Table:           sf.struct_ref.Name(),
 			Module:          module,
 			BackendHandler:  model.BackendHandler{},
 			FrontendHandler: model.FrontendHandler{},
 		}
 
-		err := sf.setStructField(&new_object, inputs_found...)
+		err := sf.setStructField(&new_object)
 		if err != nil {
 			return model.Error(err.Error())
 		}

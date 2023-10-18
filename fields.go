@@ -6,7 +6,7 @@ import (
 	"github.com/cdvelop/model"
 )
 
-func (sf structFound) setStructField(o *model.Object, inputs ...*model.Input) error {
+func (sf structFound) setStructField(o *model.Object) error {
 
 	// Crear una instancia vacía del tipo subyacente
 	structValue := reflect.New(sf.struct_ref).Elem()
@@ -39,7 +39,7 @@ func (sf structFound) setStructField(o *model.Object, inputs ...*model.Input) er
 			// Obtener y mostrar el valor de la etiqueta del campo
 			fieldTag := sf.struct_ref.Field(i).Tag
 
-			err := addObjectFields(o, name_value, fieldTag, inputs...)
+			err := addObjectFields(o, name_value, fieldTag)
 			if err != nil {
 				return err
 			}
@@ -56,7 +56,7 @@ func (sf structFound) setStructField(o *model.Object, inputs ...*model.Input) er
 	return nil
 }
 
-func addObjectFields(o *model.Object, name_value string, fieldTag reflect.StructTag, inputs ...*model.Input) error {
+func addObjectFields(o *model.Object, name_value string, fieldTag reflect.StructTag) error {
 	new_field := model.Field{
 		Name: name_value,
 	}
@@ -66,7 +66,7 @@ func addObjectFields(o *model.Object, name_value string, fieldTag reflect.Struct
 	for _, name := range getModelFieldNames() {
 		value := fieldTag.Get(name)
 		if value != "" {
-			err := setFieldFromTags(&new_field, value, name, inputs...)
+			err := setFieldFromTags(&new_field, value, name, o)
 			if err != nil {
 				return err
 			}

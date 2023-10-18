@@ -7,7 +7,7 @@ import (
 	"github.com/cdvelop/model"
 )
 
-func setFieldFromTags(obj, value interface{}, tag_name string, inputs ...*model.Input) error {
+func setFieldFromTags(obj, value interface{}, tag_name string, o *model.Object) error {
 	// Obtener el valor reflect.Value de obj
 	val := reflect.ValueOf(obj).Elem()
 
@@ -58,9 +58,9 @@ func setFieldFromTags(obj, value interface{}, tag_name string, inputs ...*model.
 		if tag_name == "Input" {
 			value_in = value.(string)
 			// fmt.Println("tag_name", tag_name, "TIPO", field_type)
-			// fmt.Println("value_in", value_in)
-			for _, mod := range inputs {
-				// fmt.Println("MODEL INPUT:", mod.InputName)
+			// fmt.Println("INPUT value NEW:", value_in)
+			for _, mod := range o.Module.Inputs {
+				// fmt.Println("INPUT value OLD:", mod.InputName)
 				if value_in == mod.InputName {
 					// Crear un reflect.Value para el puntero
 					ptrValue := reflect.ValueOf(mod)

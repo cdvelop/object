@@ -8,9 +8,14 @@ require (
 	github.com/cdvelop/unixid v0.0.2
 )
 
-require github.com/cdvelop/timetools v0.0.4 // indirect
+require (
+	github.com/cdvelop/strings v0.0.2
+	github.com/cdvelop/timetools v0.0.4 // indirect
+)
 
 replace github.com/cdvelop/model => ../model
+
+replace github.com/cdvelop/strings => ../strings
 
 replace github.com/cdvelop/timetools => ../timetools
 

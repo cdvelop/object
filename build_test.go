@@ -8,9 +8,11 @@ import (
 	"github.com/cdvelop/input"
 	"github.com/cdvelop/model"
 	"github.com/cdvelop/object"
+	"github.com/cdvelop/unixid"
 )
 
 type person struct {
+	Id_person  string `Legend:"Id" Input:"InputPK"`
 	no_include string // campos sin etiqueta Legend no se incluyen en el objeto
 	name       string `Legend:"Nombre" NotRenderHtml:"true" PrincipalField:"1" Input:"TextOnly" `
 	age        int    `Legend:"Edad" Encrypted:"true" Input:"Number"`
@@ -49,17 +51,18 @@ type stock struct {
 }
 
 func TestBuildObjectFromStruct(t *testing.T) {
-
-	mod_one := &model.Module{ModuleName: "mod_one"}
-	mod_three := &model.Module{ModuleName: "mod_three"}
-	mod_four := &model.Module{ModuleName: "mod_four"}
-	mod_five := &model.Module{ModuleName: "mod_five"}
-
-	inputs := []*model.Input{
+	add_inputs := []*model.Input{
+		unixid.InputPK(),
 		input.Text(),
 		input.Number(),
 		input.TextOnly(),
 	}
+
+	mod_one := &model.Module{ModuleName: "mod_one", Inputs: add_inputs}
+
+	mod_three := &model.Module{ModuleName: "mod_three"}
+	mod_four := &model.Module{ModuleName: "mod_four"}
+	mod_five := &model.Module{ModuleName: "mod_five"}
 
 	new_person := &person{}
 
@@ -93,6 +96,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 					NamePrincipalFields: []string{"name"},
 					Fields: []model.Field{
 						// {Name: "FullName", Legend: "Nombre"},
+						{Name: "id_person", Legend: "Id", Input: unixid.InputPK()},
 						{Name: "name", Legend: "Nombre", NotRenderHtml: true, Input: input.TextOnly()},
 						{Name: "age", Legend: "Edad", Encrypted: true, Input: input.Number()},
 						{Name: "address", Legend: "Dirección", Input: input.Text()},
@@ -171,7 +175,6 @@ func TestBuildObjectFromStruct(t *testing.T) {
 			var new_data []interface{}
 
 			new_data = append(new_data, data.model_struct...)
-			new_data = append(new_data, inputs)
 			new_data = append(new_data, data.module)
 
 			err := object.New(new_data...)
