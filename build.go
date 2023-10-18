@@ -103,7 +103,7 @@ func New(model_structs ...interface{}) error {
 
 		new_object := model.Object{
 			Name:            module.ModuleName + "." + obj_name,
-			Table:           sf.struct_ref.Name(),
+			Table:           obj_name,
 			Module:          module,
 			BackendHandler:  model.BackendHandler{},
 			FrontendHandler: model.FrontendHandler{},
