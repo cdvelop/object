@@ -74,5 +74,5 @@ func setFieldFromTags(obj, value interface{}, tag_name string, o *model.Object) 
 
 	}
 
-	return model.Error("error etiqueta:", tag_name, ":", value_in, "Tipo:", field_type, ", no soportada")
+	return model.Error(tag_name, value_in, "Tipo:", field_type, ", no existe en objeto:", o.Name)
 }
