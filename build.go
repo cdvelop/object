@@ -12,7 +12,7 @@ type structFound struct {
 	struct_ref reflect.Type
 }
 
-// arguments: main struct and *model.Module. optional: []*model.Input
+// arguments: main struct and *model.Module. inputs: []*model.Input, *model.Handlers
 func New(model_structs ...interface{}) error {
 
 	if len(model_structs) < 2 {
@@ -22,6 +22,7 @@ func New(model_structs ...interface{}) error {
 	var structs_found []structFound
 
 	var module *model.Module
+	var handlers *model.Handlers
 
 	for _, m := range model_structs {
 
@@ -66,7 +67,11 @@ func New(model_structs ...interface{}) error {
 			if module_pointer, ok := module_value.(*model.Module); ok {
 				// fmt.Println("ESTRUCTURA ES UN PUNTERO MODULO: ", module_pointer)
 				module = module_pointer
+			} else if handlers_found, ok := module_value.(*model.Handlers); ok {
+				handlers = handlers_found
+
 			} else {
+
 				// puede que se enviaron las estructuras principales como punteros
 
 				// Obtén el tipo subyacente al puntero
@@ -81,8 +86,9 @@ func New(model_structs ...interface{}) error {
 					})
 
 				}
-
 			}
+
+		case reflect.Interface:
 
 		default:
 			return model.Error("error tipo:", t.Kind().String(), ". no implementado.")
@@ -95,6 +101,9 @@ func New(model_structs ...interface{}) error {
 
 	if module == nil {
 		return model.Error("error puntero de *model.Module no ingresado como argumento")
+	}
+	if handlers == nil {
+		return model.Error("error puntero de *model.Handlers en modulo:", module.ModuleName, "no ingresado como argumento")
 	}
 
 	for _, sf := range structs_found {
@@ -109,7 +118,7 @@ func New(model_structs ...interface{}) error {
 			FrontendHandler: model.FrontendHandler{},
 		}
 
-		err := sf.setStructField(&new_object)
+		err := sf.setStructField(&new_object, handlers)
 		if err != nil {
 			return model.Error(err.Error())
 		}

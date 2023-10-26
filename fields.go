@@ -6,7 +6,7 @@ import (
 	"github.com/cdvelop/model"
 )
 
-func (sf structFound) setStructField(o *model.Object) error {
+func (sf structFound) setStructField(o *model.Object, h *model.Handlers) error {
 
 	// Crear una instancia vacía del tipo subyacente
 	structValue := reflect.New(sf.struct_ref).Elem()
@@ -21,7 +21,9 @@ func (sf structFound) setStructField(o *model.Object) error {
 
 		// Verificar si el campo "Object" existe en la estructura
 		if name_value == "Object" && fieldType == reflect.TypeOf((*model.Object)(nil)) {
-			field.Set(reflect.ValueOf(o)) // Asignar el campo "Object" en la estructura
+			field.Set(reflect.ValueOf(o)) // Asignar el campo "Object" a la estructura
+		} else if name_value == "App" && fieldType == reflect.TypeOf((*model.Handlers)(nil)) {
+			field.Set(reflect.ValueOf(h)) // Asignar el campo "Handlers" a la estructura
 		} else {
 
 			// primera letra en minúscula

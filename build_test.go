@@ -51,6 +51,17 @@ type stock struct {
 }
 
 func TestBuildObjectFromStruct(t *testing.T) {
+
+	handlers := &model.Handlers{
+		ThemeAdapter:    nil,
+		DataBaseAdapter: nil,
+		TimeAdapter:     nil,
+		DomAdapter:      nil,
+		HttpAdapter:     nil,
+		AuthAdapter:     nil,
+		Logger:          nil,
+	}
+
 	add_inputs := []*model.Input{
 		unixid.InputPK(),
 		input.Text(),
@@ -82,12 +93,14 @@ func TestBuildObjectFromStruct(t *testing.T) {
 
 	dataTest := map[string]struct {
 		module       *model.Module
+		handlers     *model.Handlers
 		model_struct []interface{}
 		expected     []*model.Object
 		err          string
 	}{
 		"1- estructura person expected_object1 solo con handlers front back delete": {
 			module:       mod_one,
+			handlers:     handlers,
 			model_struct: []interface{}{new_person},
 			expected: []*model.Object{
 				{
@@ -121,6 +134,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 		},
 		"3- estructura staff ya inicializada, un campo, sin tags, modulo y 1 handler front se espera ok": {
 			module:       mod_three,
+			handlers:     handlers,
 			model_struct: []interface{}{new_staff3},
 			expected: []*model.Object{
 				{
@@ -134,6 +148,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 		},
 		"4- ingreso de 2 estructuras staff y user solo un campo con modulo se espera ok": {
 			module:       mod_four,
+			handlers:     handlers,
 			model_struct: []interface{}{new_staff4, new_user4},
 			expected: []*model.Object{
 				{
@@ -152,6 +167,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 		},
 		"5- 2 estructuras product y stock como punteros se espera agregar el puntero del objeto a cada una de ellas": {
 			module:       mod_five,
+			handlers:     handlers,
 			model_struct: []interface{}{&new_product, &new_stock},
 			expected: []*model.Object{
 				{
@@ -176,6 +192,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 
 			new_data = append(new_data, data.model_struct...)
 			new_data = append(new_data, data.module)
+			new_data = append(new_data, data.handlers)
 
 			err := object.New(new_data...)
 			if err != nil {
