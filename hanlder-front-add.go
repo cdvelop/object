@@ -6,6 +6,10 @@ import (
 
 func addFrontHandlers(o *model.Object, new_struct interface{}) {
 
+	// if _, ok := new_struct.(model.StoreData); ok {
+	// 	o.StoreData = new_struct.(model.StoreData)
+	// }
+
 	if _, ok := new_struct.(model.AfterCreate); ok {
 		// fmt.Println("ESTRUCTURA", o.Name, "CONTIENE FrontendHandler AfterCreate")
 		o.AfterCreate = new_struct.(model.AfterCreate)

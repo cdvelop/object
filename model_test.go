@@ -37,7 +37,7 @@ func Object1() *model.Object {
 		Fields: []model.Field{
 			{Name: id_user_key, Input: unixid.InputPK()},
 			{Name: nameKey, Input: input.Text(), Legend: "Nombre"},
-			{Name: genderKey, Input: input.Radio(dataGenero{})},
+			{Name: genderKey, Input: input.Radio("genre", dataGenero{})},
 			{Name: descriptionKey, Input: input.Text(), Legend: "Descripción", SkipCompletionAllowed: true},
 			{Name: rutKey, Input: input.Rut(), Unique: true, SkipCompletionAllowed: true},
 		},
@@ -62,7 +62,7 @@ func Object2() *model.Object {
 		Fields: []model.Field{
 			{Name: "id_" + TableName2, Input: unixid.InputPK()},
 			{Name: id_user_key, Legend: "Id Usuario", Input: unixid.InputPK()},
-			{Name: TableName2 + "_state", Input: input.Radio(dataState{})},
+			{Name: TableName2 + "_state", Input: input.Radio("state", dataState{})},
 		},
 	}
 
