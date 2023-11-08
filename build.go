@@ -127,6 +127,8 @@ func New(model_structs ...interface{}) error {
 
 		addBackHandlers(&new_object, sf.struct_int)
 
+		addBasicHandlers(&new_object, sf.struct_int)
+
 		module.Objects = append(module.Objects, &new_object)
 
 	}

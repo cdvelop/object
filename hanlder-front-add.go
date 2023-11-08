@@ -36,4 +36,8 @@ func addFrontHandlers(o *model.Object, new_struct interface{}) {
 		o.ViewHandler = new_struct.(model.ViewHandler)
 	}
 
+	if _, ok := new_struct.(model.ViewReset); ok {
+		o.ViewReset = new_struct.(model.ViewReset)
+	}
+
 }
