@@ -34,7 +34,7 @@ func New(model_structs ...interface{}) error {
 
 		case reflect.Struct:
 
-			return model.Error("error debes de ingresar las estructuras como  punteros.")
+			return model.Error("error debes de ingresar las estructuras como  punteros en object new")
 
 		case reflect.Slice:
 			// fmt.Println("Slice ")
@@ -103,7 +103,7 @@ func New(model_structs ...interface{}) error {
 		return model.Error("error puntero de *model.Module no ingresado como argumento")
 	}
 	if handlers == nil {
-		return model.Error("error puntero de *model.Handlers en modulo:", module.ModuleName, "no ingresado como argumento")
+		return model.Error("al crear objeto:", structs_found[0].struct_ref.Name(), "para el modulo", module.ModuleName, "puntero: *model.Handlers no ingresado como argumento")
 	}
 
 	for _, sf := range structs_found {

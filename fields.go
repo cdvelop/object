@@ -63,8 +63,6 @@ func addObjectFields(o *model.Object, name_value string, fieldTag reflect.Struct
 		Name: name_value,
 	}
 
-	var add_field bool
-
 	for _, name := range getModelFieldNames() {
 		value := fieldTag.Get(name)
 		if value != "" {
@@ -72,18 +70,14 @@ func addObjectFields(o *model.Object, name_value string, fieldTag reflect.Struct
 			if err != nil {
 				return err
 			}
-
-			add_field = true
 		}
 	}
 
-	if fieldTag.Get("PrincipalField") != "" {
-		add_field = true
-		o.NamePrincipalFields = append(o.NamePrincipalFields, name_value)
-	}
-
-	if add_field {
+	if new_field.Input != nil || fieldTag.Get("Legend") != "" {
+		o.PrincipalFieldsName = append(o.PrincipalFieldsName, name_value)
 		o.Fields = append(o.Fields, new_field)
+	} else if fieldTag.Get("Required") != "" {
+		o.PrincipalFieldsName = append(o.PrincipalFieldsName, name_value)
 	}
 
 	return nil

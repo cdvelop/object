@@ -11,13 +11,17 @@ import (
 	"github.com/cdvelop/unixid"
 )
 
+// NOTA:
+// campos sin inputs definidos se incluyen en el objeto
+// solo si tienen tag Legend, de igual forma en el slice string []PrincipalFieldName
 type person struct {
 	Id_person  string `Legend:"Id" Input:"InputPK"`
-	no_include string // campos sin etiqueta Legend no se incluyen en el objeto
-	name       string `Legend:"Nombre" NotRenderHtml:"true" PrincipalField:"1" Input:"TextOnly" `
-	age        int    `Legend:"Edad" Encrypted:"true" Input:"Number"`
+	no_include string
+	name       string `NotRenderHtml:"true" Input:"TextOnly" ` // no tiene legend pero si input de incluye como campo principal
+	Age        int    `Encrypted:"true"`                       // no se incluye au que tenga mayúscula, no tiene input ni legend
 	Address    string `Legend:"Dirección" Input:"Text"`
 	Cars       string `Legend:"Vehículos" Input:"Text" SourceTable:"cars"`
+	Other      string `Required:"true"` // se incluye solo en []PrincipalFieldName
 }
 
 func (person) SetObjectInDomAfterDelete(data ...map[string]string) (err error) {
@@ -106,12 +110,10 @@ func TestBuildObjectFromStruct(t *testing.T) {
 				{
 					Name:                mod_one.ModuleName + ".person",
 					Table:               "person",
-					NamePrincipalFields: []string{"name"},
+					PrincipalFieldsName: []string{"id_person", "name", "address", "cars", "other"},
 					Fields: []model.Field{
-						// {Name: "FullName", Legend: "Nombre"},
 						{Name: "id_person", Legend: "Id", Input: unixid.InputPK()},
-						{Name: "name", Legend: "Nombre", NotRenderHtml: true, Input: input.TextOnly()},
-						{Name: "age", Legend: "Edad", Encrypted: true, Input: input.Number()},
+						{Name: "name", NotRenderHtml: true, Input: input.TextOnly()},
 						{Name: "address", Legend: "Dirección", Input: input.Text()},
 						{Name: "cars", Legend: "Vehículos", Input: input.Text(), SourceTable: "cars"},
 					},
@@ -130,7 +132,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 					Name: "user",
 				},
 			},
-			err: "error debes de ingresar las estructuras como  punteros.",
+			err: "error debes de ingresar las estructuras como  punteros en object new",
 		},
 		"3- estructura staff ya inicializada, un campo, sin tags, modulo y 1 handler front se espera ok": {
 			module:       mod_three,
