@@ -27,9 +27,4 @@ func addBackHandlers(o *model.Object, new_struct interface{}) {
 		o.DeleteApi = new_struct.(model.DeleteApi)
 	}
 
-	if _, ok := new_struct.(model.FileHandler); ok {
-		// fmt.Println("ESTRUCTURA", o.Name, "CONTIENE BackendHandler FileHandler")
-		o.FileHandler = new_struct.(model.FileHandler)
-	}
-
 }

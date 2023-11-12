@@ -22,7 +22,7 @@ func (sf structFound) setStructField(o *model.Object, h *model.Handlers) error {
 		// Verificar si el campo "Object" existe en la estructura
 		if name_value == "Object" && fieldType == reflect.TypeOf((*model.Object)(nil)) {
 			field.Set(reflect.ValueOf(o)) // Asignar el campo "Object" a la estructura
-		} else if name_value == "App" && fieldType == reflect.TypeOf((*model.Handlers)(nil)) {
+		} else if h != nil && name_value == "App" && fieldType == reflect.TypeOf((*model.Handlers)(nil)) {
 			field.Set(reflect.ValueOf(h)) // Asignar el campo "Handlers" a la estructura
 		} else {
 
@@ -37,13 +37,13 @@ func (sf structFound) setStructField(o *model.Object, h *model.Handlers) error {
 					field.SetString(name_value)
 				}
 
-			}
-			// Obtener y mostrar el valor de la etiqueta del campo
-			fieldTag := sf.struct_ref.Field(i).Tag
+				// Obtener y mostrar el valor de la etiqueta del campo
+				fieldTag := sf.struct_ref.Field(i).Tag
 
-			err := addObjectFields(o, name_value, fieldTag)
-			if err != nil {
-				return err
+				err := addObjectFields(o, name_value, fieldTag)
+				if err != nil {
+					return err
+				}
 			}
 		}
 
@@ -73,12 +73,11 @@ func addObjectFields(o *model.Object, name_value string, fieldTag reflect.Struct
 		}
 	}
 
-	if new_field.Input != nil || fieldTag.Get("Legend") != "" {
-		o.PrincipalFieldsName = append(o.PrincipalFieldsName, name_value)
-		o.Fields = append(o.Fields, new_field)
-	} else if fieldTag.Get("Required") != "" {
+	if fieldTag.Get("Legend") != "" {
 		o.PrincipalFieldsName = append(o.PrincipalFieldsName, name_value)
 	}
+
+	o.Fields = append(o.Fields, new_field)
 
 	return nil
 }

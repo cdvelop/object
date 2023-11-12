@@ -15,8 +15,8 @@ type structFound struct {
 // arguments: main struct and *model.Module. inputs: []*model.Input, *model.Handlers
 func New(model_structs ...interface{}) error {
 
-	if len(model_structs) < 2 {
-		return model.Error("error tienes que ingresar mínimo una estructura y un puntero de *model.Module como argumentos.")
+	if len(model_structs) < 1 {
+		return model.Error("error tienes que ingresar mínimo un puntero de una estructura como argumento.")
 	}
 
 	var structs_found []structFound
@@ -99,21 +99,25 @@ func New(model_structs ...interface{}) error {
 		return model.Error("error ninguna estructura valida ingresada")
 	}
 
-	if module == nil {
-		return model.Error("error puntero de *model.Module no ingresado como argumento")
-	}
-	if handlers == nil {
-		return model.Error("al crear objeto:", structs_found[0].struct_ref.Name(), "para el modulo", module.ModuleName, "puntero: *model.Handlers no ingresado como argumento")
+	// agregamos el modulo al manejador solo si el modulo fue ingresado
+	if module != nil && handlers != nil {
+		handlers.AddModules(module)
 	}
 
 	for _, sf := range structs_found {
 
 		obj_name := strings.ToLowerCaseAlphabet(sf.struct_ref.Name())
 
+		var module_name string
+
+		if module != nil {
+			module_name = module.ModuleName + "."
+		}
+
 		new_object := model.Object{
-			Name:            module.ModuleName + "." + obj_name,
+			Name:            module_name + obj_name,
 			Table:           obj_name,
-			Module:          module,
+			Module:          module, // se permite modulo nulo, solo que no sera agregado a ningún lado, util para crear tablas con el objeto
 			BackendHandler:  model.BackendHandler{},
 			FrontendHandler: model.FrontendHandler{},
 		}
@@ -129,7 +133,14 @@ func New(model_structs ...interface{}) error {
 
 		addBasicHandlers(&new_object, sf.struct_int)
 
-		module.Objects = append(module.Objects, &new_object)
+		if module != nil {
+			module.Objects = append(module.Objects, &new_object)
+		}
+
+		// agregamos el nuevo objeto a manejador solo si el modulo es valido
+		if handlers != nil && module != nil {
+			handlers.AddObjects(&new_object)
+		}
 
 	}
 

@@ -13,15 +13,15 @@ import (
 
 // NOTA:
 // campos sin inputs definidos se incluyen en el objeto
-// solo si tienen tag Legend, de igual forma en el slice string []PrincipalFieldName
+// al tener tag Legend se agregan al slice string []PrincipalFieldName
 type person struct {
 	Id_person  string `Legend:"Id" Input:"InputPK"`
 	no_include string
-	name       string `NotRenderHtml:"true" Input:"TextOnly" ` // no tiene legend pero si input de incluye como campo principal
+	name       string `NotRenderHtml:"true" Input:"TextOnly" ` // no incluye empieza con minúscula
 	Age        int    `Encrypted:"true"`                       // no se incluye au que tenga mayúscula, no tiene input ni legend
 	Address    string `Legend:"Dirección" Input:"Text"`
 	Cars       string `Legend:"Vehículos" Input:"Text" SourceTable:"cars"`
-	Other      string `Required:"true"` // se incluye solo en []PrincipalFieldName
+	Other      string // no tiene ninguna etiqueta se crea el campo pero no se agrega en PrincipalFieldName
 }
 
 func (person) SetObjectInDomAfterDelete(data ...map[string]string) (err error) {
@@ -61,7 +61,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 		DataBaseAdapter: nil,
 		TimeAdapter:     nil,
 		DomAdapter:      nil,
-		HttpAdapter:     nil,
+		FetchAdapter:    nil,
 		AuthAdapter:     nil,
 		Logger:          nil,
 	}
@@ -110,12 +110,14 @@ func TestBuildObjectFromStruct(t *testing.T) {
 				{
 					Name:                mod_one.ModuleName + ".person",
 					Table:               "person",
-					PrincipalFieldsName: []string{"id_person", "name", "address", "cars", "other"},
+					PrincipalFieldsName: []string{"id_person", "address", "cars"},
 					Fields: []model.Field{
 						{Name: "id_person", Legend: "Id", Input: unixid.InputPK()},
-						{Name: "name", NotRenderHtml: true, Input: input.TextOnly()},
+						// {Name: "name", NotRenderHtml: true, Input: input.TextOnly()},
+						{Name: "age", Encrypted: true},
 						{Name: "address", Legend: "Dirección", Input: input.Text()},
 						{Name: "cars", Legend: "Vehículos", Input: input.Text(), SourceTable: "cars"},
+						{Name: "other"},
 					},
 					Module:          mod_one,
 					BackendHandler:  model.BackendHandler{DeleteApi: new_person},
@@ -211,7 +213,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 						fmt.Println()
 					}
 
-					log.Fatal()
+					log.Fatalln()
 				}
 
 				for i, obj_expected := range data.expected {
@@ -244,4 +246,37 @@ func TestBuildObjectFromStruct(t *testing.T) {
 
 	}
 
+}
+
+func TestStructWhitOutModule(t *testing.T) {
+	// estructura sin *model.Module se debería crear objeto pero no ingresarlo
+	type stock struct {
+		Object *model.Object
+		Id     string
+		Name   string
+	}
+
+	s := &stock{}
+
+	err := object.New(s)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// fmt.Println("RESULTADO:", f)
+	if s.Object == nil {
+		t.Fatal("Se esperaba Objeto asignado pero se obtuvo:", s.Object)
+	}
+
+	if s.Id != "id" {
+		t.Fatal("Se esperaba campo Id con valor: 'id' pero se obtuvo:", s.Id)
+	}
+	if s.Name != "name" {
+		t.Fatal("Se esperaba campo Name con valor: 'name' pero se obtuvo:", s.Name)
+	}
+
+	if len(s.Object.Fields) != 2 {
+		t.Fatal("Se esperaba 2 campos creados pero se obtuvo:", len(s.Object.Fields))
+	}
+
+	// fmt.Println(s)
 }
