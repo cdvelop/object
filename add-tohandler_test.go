@@ -134,7 +134,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 					Name: "user",
 				},
 			},
-			err: "error debes de ingresar las estructuras como  punteros en object new",
+			err: "error debes de ingresar las estructuras como punteros en AddToHandlerFromStructs",
 		},
 		"3- estructura staff ya inicializada, un campo, sin tags, modulo y 1 handler front se espera ok": {
 			module:       mod_three,
@@ -198,17 +198,19 @@ func TestBuildObjectFromStruct(t *testing.T) {
 			new_data = append(new_data, data.module)
 			new_data = append(new_data, data.handlers)
 
-			err := object.New(new_data...)
+			err := object.AddToHandlerFromStructs(new_data...)
 			if err != nil {
 				if data.err != err.Error() {
-					log.Fatalf("\n-no se esperaba error pero se obtuvo:\n%v\n", err.Error())
+					log.Fatalf("\n-mensaje error diferente:\n-se esperaba:%v\n-pero se obtuvo:\n%v\n", data.err, err.Error())
 				}
 			} else {
 
 				if len(data.expected) != len(data.module.Objects) {
+
 					fmt.Printf("-se esperaba:%v -pero se obtuvo:%v objeto(s)\n\n", len(data.expected), len(data.module.Objects))
 
-					for _, o := range data.module.Objects {
+					for i, o := range data.module.Objects {
+						fmt.Println("---", i)
 						fmt.Println(o)
 						fmt.Println()
 					}
@@ -258,7 +260,7 @@ func TestStructWhitOutModule(t *testing.T) {
 
 	s := &stock{}
 
-	err := object.New(s)
+	err := object.AddToHandlerFromStructs(s)
 	if err != nil {
 		t.Fatal(err)
 	}

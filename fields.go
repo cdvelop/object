@@ -4,6 +4,7 @@ import (
 	"reflect"
 
 	"github.com/cdvelop/model"
+	"github.com/cdvelop/strings"
 )
 
 func (sf structFound) setStructField(o *model.Object, h *model.Handlers) error {
@@ -27,7 +28,7 @@ func (sf structFound) setStructField(o *model.Object, h *model.Handlers) error {
 		} else {
 
 			// primera letra en minúscula
-			if newChar, ok := valid_letters[name_value[0]]; ok {
+			if newChar, ok := strings.VALID_LETTERS[name_value[0]]; ok {
 
 				name_value = string(newChar) + name_value[1:]
 
@@ -90,10 +91,4 @@ func getModelFieldNames() (names []string) {
 	}
 
 	return
-}
-
-var valid_letters = map[byte]byte{
-	'A': 'a', 'B': 'b', 'C': 'c', 'D': 'd', 'E': 'e', 'F': 'f', 'G': 'g', 'H': 'h', 'I': 'i',
-	'J': 'j', 'K': 'k', 'L': 'l', 'M': 'm', 'N': 'n', 'O': 'o', 'P': 'p', 'Q': 'q', 'R': 'r',
-	'S': 's', 'T': 't', 'U': 'u', 'V': 'v', 'W': 'w', 'X': 'x', 'Y': 'y', 'Z': 'z',
 }

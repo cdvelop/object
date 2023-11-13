@@ -29,6 +29,9 @@ func Test_GetDataTestObject(t *testing.T) {
 
 	// 2 prueba saltándose el id
 	all_data2, err := Object1().TestData(required, true, false)
+	if err != nil {
+		t.Fatal(err)
+	}
 
 	expected := len(Object1().Fields) - 1
 	for _, data := range all_data2 {

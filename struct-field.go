@@ -4,6 +4,7 @@ import (
 	"reflect"
 
 	"github.com/cdvelop/model"
+	"github.com/cdvelop/strings"
 )
 
 func SetFieldsStructToSameName(modelStructs ...interface{}) error {
@@ -27,7 +28,7 @@ func SetFieldsStructToSameName(modelStructs ...interface{}) error {
 			fieldType := field.Type()
 			nameValue := st.Field(i).Name
 
-			nameValue = lowercaseFirstLetter(nameValue)
+			nameValue = strings.LowerCaseFirstLetter(nameValue)
 
 			if fieldType.Kind() == reflect.String {
 				field.SetString(nameValue)
@@ -39,11 +40,4 @@ func SetFieldsStructToSameName(modelStructs ...interface{}) error {
 	}
 
 	return nil
-}
-
-func lowercaseFirstLetter(name string) string {
-	if newChar, ok := valid_letters[name[0]]; ok {
-		return string(newChar) + name[1:]
-	}
-	return name
 }
