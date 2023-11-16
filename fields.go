@@ -29,21 +29,21 @@ func (sf structFound) setStructField(o *model.Object, h *model.Handlers) error {
 
 			// primera letra en minúscula
 			if newChar, ok := strings.VALID_LETTERS[name_value[0]]; ok {
-
-				name_value = string(newChar) + name_value[1:]
-
 				// Verificar si el campo es de tipo string
 				if fieldType.Kind() == reflect.String {
+
+					name_value = string(newChar) + name_value[1:]
+
 					// Asignar el nombre del campo como valor
 					field.SetString(name_value)
-				}
 
-				// Obtener y mostrar el valor de la etiqueta del campo
-				fieldTag := sf.struct_ref.Field(i).Tag
+					// Obtener y mostrar el valor de la etiqueta del campo
+					fieldTag := sf.struct_ref.Field(i).Tag
 
-				err := addObjectFields(o, name_value, fieldTag)
-				if err != nil {
-					return err
+					err := addObjectFields(o, name_value, fieldTag)
+					if err != nil {
+						return err
+					}
 				}
 			}
 		}

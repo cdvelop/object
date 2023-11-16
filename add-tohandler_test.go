@@ -18,7 +18,7 @@ type person struct {
 	Id_person  string `Legend:"Id" Input:"InputPK"`
 	no_include string
 	name       string `NotRenderHtml:"true" Input:"TextOnly" ` // no incluye empieza con minúscula
-	Age        int    `Encrypted:"true"`                       // no se incluye au que tenga mayúscula, no tiene input ni legend
+	Age        int    `Encrypted:"true"`                       // tipo int no se incluye au que tenga mayúscula, no tiene input ni legend
 	Address    string `Legend:"Dirección" Input:"Text"`
 	Cars       string `Legend:"Vehículos" Input:"Text" SourceTable:"cars"`
 	Other      string // no tiene ninguna etiqueta se crea el campo pero no se agrega en PrincipalFieldName
@@ -113,8 +113,6 @@ func TestBuildObjectFromStruct(t *testing.T) {
 					PrincipalFieldsName: []string{"id_person", "address", "cars"},
 					Fields: []model.Field{
 						{Name: "id_person", Legend: "Id", Input: unixid.InputPK()},
-						// {Name: "name", NotRenderHtml: true, Input: input.TextOnly()},
-						{Name: "age", Encrypted: true},
 						{Name: "address", Legend: "Dirección", Input: input.Text()},
 						{Name: "cars", Legend: "Vehículos", Input: input.Text(), SourceTable: "cars"},
 						{Name: "other"},
