@@ -27,15 +27,16 @@ func TestBuildOneObject(t *testing.T) {
 
 	type user struct {
 		Id   string
-		Name string `Input:"Text"`
+		Name string `Legend:"Nombre" Input:"Text"`
 	}
 
 	obj_expected := &model.Object{
-		Name:  "user",
-		Table: "user",
+		Name:                "user",
+		Table:               "user",
+		PrincipalFieldsName: []string{"name"},
 		Fields: []model.Field{
-			{Name: "id"},
-			{Name: "name", Input: input_text},
+			// {Name: "id"},
+			{Name: "name", Legend: "Nombre", Input: input_text},
 		},
 		Module: module,
 	}

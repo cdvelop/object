@@ -76,9 +76,9 @@ func addObjectFields(o *model.Object, name_value string, fieldTag reflect.Struct
 
 	if fieldTag.Get("Legend") != "" {
 		o.PrincipalFieldsName = append(o.PrincipalFieldsName, name_value)
-	}
 
-	o.Fields = append(o.Fields, new_field)
+		o.Fields = append(o.Fields, new_field)
+	}
 
 	return nil
 }

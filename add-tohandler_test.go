@@ -21,7 +21,7 @@ type person struct {
 	Age        int    `Encrypted:"true"`                       // tipo int no se incluye au que tenga mayúscula, no tiene input ni legend
 	Address    string `Legend:"Dirección" Input:"Text"`
 	Cars       string `Legend:"Vehículos" Input:"Text" SourceTable:"cars"`
-	Other      string // no tiene ninguna etiqueta se crea el campo pero no se agrega en PrincipalFieldName
+	Other      string // no tiene ninguna etiqueta solo se le asigna como valor el nombre se su campo
 }
 
 func (person) SetObjectInDomAfterDelete(data ...map[string]string) (err error) {
@@ -115,7 +115,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 						{Name: "id_person", Legend: "Id", Input: unixid.InputPK()},
 						{Name: "address", Legend: "Dirección", Input: input.Text()},
 						{Name: "cars", Legend: "Vehículos", Input: input.Text(), SourceTable: "cars"},
-						{Name: "other"},
+						// {Name: "other"},
 					},
 					Module:          mod_one,
 					BackendHandler:  model.BackendHandler{DeleteApi: new_person},
@@ -253,7 +253,7 @@ func TestStructWhitOutModule(t *testing.T) {
 	type stock struct {
 		Object *model.Object
 		Id     string
-		Name   string
+		Name   string `Legend:"Nombre"`
 	}
 
 	s := &stock{}
@@ -274,8 +274,8 @@ func TestStructWhitOutModule(t *testing.T) {
 		t.Fatal("Se esperaba campo Name con valor: 'name' pero se obtuvo:", s.Name)
 	}
 
-	if len(s.Object.Fields) != 2 {
-		t.Fatal("Se esperaba 2 campos creados pero se obtuvo:", len(s.Object.Fields))
+	if len(s.Object.Fields) != 1 {
+		t.Fatal("Se esperaba 1 campo creado pero se obtuvo:", len(s.Object.Fields))
 	}
 
 	// fmt.Println(s)
