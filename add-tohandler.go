@@ -1,5 +1,6 @@
 package object
 
+var noAddObjectFields bool // por defecto siempre se agregan los campos validos al objeto
 // arguments: main struct and *model.Module. inputs: []*model.Input, *model.Handlers
 func AddToHandlerFromStructs(model_structs ...interface{}) error {
 
@@ -14,8 +15,9 @@ func AddToHandlerFromStructs(model_structs ...interface{}) error {
 	}
 
 	for _, sf := range st_founds {
+		noAddObjectFields = false
 
-		new_object, err := buildObject(sf, module, false)
+		new_object, err := sf.buildObject(module)
 		if err != nil {
 			return err
 		}

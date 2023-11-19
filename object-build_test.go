@@ -10,7 +10,7 @@ import (
 	"github.com/cdvelop/object"
 )
 
-// se espera que no se agregue el objeto al modulo. pero que use sus inputs
+// se espera que se agregue el objeto al modulo. y use sus inputs
 func TestBuildOneObject(t *testing.T) {
 	input_text := input.Text()
 
@@ -33,7 +33,7 @@ func TestBuildOneObject(t *testing.T) {
 	obj_expected := &model.Object{
 		Name:                "user",
 		Table:               "user",
-		PrincipalFieldsName: []string{"name"},
+		PrincipalFieldsName: []string{"id", "name"},
 		Fields: []model.Field{
 			// {Name: "id"},
 			{Name: "name", Legend: "Nombre", Input: input_text},
@@ -43,7 +43,7 @@ func TestBuildOneObject(t *testing.T) {
 
 	u := &user{}
 
-	obj_resp, err := object.BuildObjectFromStruct(true, u, module)
+	obj_resp, err := object.BuildObjectFromStruct(u, module)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -56,8 +56,8 @@ func TestBuildOneObject(t *testing.T) {
 		log.Fatalln()
 	}
 
-	if len(module.Objects) != 0 {
-		fmt.Printf("error se esperaba que no se agregara el objeto al modulo")
+	if len(module.Objects) != 1 {
+		fmt.Printf("error se esperaba que se agregara 1 objeto al modulo")
 		log.Fatalln()
 	}
 

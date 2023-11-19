@@ -21,7 +21,7 @@ type person struct {
 	Age        int    `Encrypted:"true"`                       // tipo int no se incluye au que tenga mayúscula, no tiene input ni legend
 	Address    string `Legend:"Dirección" Input:"Text"`
 	Cars       string `Legend:"Vehículos" Input:"Text" SourceTable:"cars"`
-	Other      string // no tiene ninguna etiqueta solo se le asigna como valor el nombre se su campo
+	Other      string // no tiene ninguna etiqueta solo se le asigna como valor el nombre se su campo y como campo principal
 }
 
 func (person) SetObjectInDomAfterDelete(data ...map[string]string) (err error) {
@@ -110,7 +110,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 				{
 					Name:                mod_one.ModuleName + ".person",
 					Table:               "person",
-					PrincipalFieldsName: []string{"id_person", "address", "cars"},
+					PrincipalFieldsName: []string{"id_person", "age", "address", "cars", "other"},
 					Fields: []model.Field{
 						{Name: "id_person", Legend: "Id", Input: unixid.InputPK()},
 						{Name: "address", Legend: "Dirección", Input: input.Text()},

@@ -7,7 +7,7 @@ import (
 	"github.com/cdvelop/model"
 )
 
-func setFieldFromTags(obj, value interface{}, tag_name string, o *model.Object) error {
+func (sf *structFound) setFieldFromTags(obj, value interface{}, tag_name string) error {
 	// Obtener el valor reflect.Value de obj
 	val := reflect.ValueOf(obj).Elem()
 
@@ -59,7 +59,7 @@ func setFieldFromTags(obj, value interface{}, tag_name string, o *model.Object) 
 			value_in = value.(string)
 			// fmt.Println("tag_name", tag_name, "TIPO", field_type)
 			// fmt.Println("INPUT value NEW:", value_in)
-			for _, mod := range o.Module.Inputs {
+			for _, mod := range sf.o.Module.Inputs {
 				// fmt.Println("INPUT value OLD:", mod.InputName)
 				if value_in == mod.InputName {
 					// Crear un reflect.Value para el puntero
@@ -74,5 +74,5 @@ func setFieldFromTags(obj, value interface{}, tag_name string, o *model.Object) 
 
 	}
 
-	return model.Error(tag_name, value_in, "Tipo:", field_type, ", no existe en objeto:", o.Name)
+	return model.Error(tag_name, value_in, "Tipo:", field_type, ", no existe en objeto:", sf.o.Name)
 }
