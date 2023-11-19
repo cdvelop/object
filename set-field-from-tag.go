@@ -74,5 +74,5 @@ func (sf *structFound) setFieldFromTags(obj, value interface{}, tag_name string)
 
 	}
 
-	return model.Error(tag_name, value_in, "Tipo:", field_type, ", no existe en objeto:", sf.o.Name)
+	return model.Error(tag_name, value_in, "Tipo:", field_type, ", no existe en objeto:", sf.o.ObjectName)
 }

@@ -19,8 +19,8 @@ const (
 
 var (
 	objects = map[string]model.Object{
-		Object1().Name: *Object1(),
-		Object2().Name: *Object2(),
+		Object1().ObjectName: *Object1(),
+		Object2().ObjectName: *Object2(),
 	}
 )
 
@@ -32,8 +32,8 @@ func (dataGenero) SourceData() map[string]string {
 
 func Object1() *model.Object {
 	t1 := model.Object{
-		Name:  TableName1,
-		Table: TableName1,
+		ObjectName: TableName1,
+		Table:      TableName1,
 		Fields: []model.Field{
 			{Name: id_user_key, Input: unixid.InputPK()},
 			{Name: nameKey, Input: input.Text(), Legend: "Nombre"},
@@ -57,8 +57,8 @@ func (dataState) SourceData() map[string]string {
 func Object2() *model.Object {
 
 	t2 := model.Object{
-		Name:  TableName2,
-		Table: TableName2,
+		ObjectName: TableName2,
+		Table:      TableName2,
 		Fields: []model.Field{
 			{Name: "id_" + TableName2, Input: unixid.InputPK()},
 			{Name: id_user_key, Legend: "Id Usuario", Input: unixid.InputPK()},

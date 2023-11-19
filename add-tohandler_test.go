@@ -108,7 +108,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 			model_struct: []interface{}{new_person},
 			expected: []*model.Object{
 				{
-					Name:                mod_one.ModuleName + ".person",
+					ObjectName:          mod_one.ModuleName + ".person",
 					Table:               "person",
 					PrincipalFieldsName: []string{"id_person", "age", "address", "cars", "other"},
 					Fields: []model.Field{
@@ -129,7 +129,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 			model_struct: []interface{}{user{}},
 			expected: []*model.Object{
 				{
-					Name: "user",
+					ObjectName: "user",
 				},
 			},
 			err: "error debes de ingresar las estructuras como punteros en AddToHandlerFromStructs",
@@ -140,7 +140,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 			model_struct: []interface{}{new_staff3},
 			expected: []*model.Object{
 				{
-					Name:           mod_three.ModuleName + ".staff",
+					ObjectName:     mod_three.ModuleName + ".staff",
 					Table:          "staff",
 					Module:         mod_three,
 					BackendHandler: model.BackendHandler{DeleteApi: new_staff3},
@@ -154,15 +154,15 @@ func TestBuildObjectFromStruct(t *testing.T) {
 			model_struct: []interface{}{new_staff4, new_user4},
 			expected: []*model.Object{
 				{
-					Name:           mod_four.ModuleName + ".staff",
+					ObjectName:     mod_four.ModuleName + ".staff",
 					Table:          "staff",
 					Module:         mod_four,
 					BackendHandler: model.BackendHandler{DeleteApi: new_staff4},
 				},
 				{
-					Name:   mod_four.ModuleName + ".user",
-					Table:  "user",
-					Module: mod_four,
+					ObjectName: mod_four.ModuleName + ".user",
+					Table:      "user",
+					Module:     mod_four,
 				},
 			},
 			err: "",
@@ -173,14 +173,14 @@ func TestBuildObjectFromStruct(t *testing.T) {
 			model_struct: []interface{}{&new_product, &new_stock},
 			expected: []*model.Object{
 				{
-					Name:   mod_five.ModuleName + ".product",
-					Table:  "product",
-					Module: mod_five,
+					ObjectName: mod_five.ModuleName + ".product",
+					Table:      "product",
+					Module:     mod_five,
 				},
 				{
-					Name:   mod_five.ModuleName + ".stock",
-					Table:  "stock",
-					Module: mod_five,
+					ObjectName: mod_five.ModuleName + ".stock",
+					Table:      "stock",
+					Module:     mod_five,
 				},
 			},
 			err: "",
@@ -251,9 +251,9 @@ func TestBuildObjectFromStruct(t *testing.T) {
 func TestStructWhitOutModule(t *testing.T) {
 	// estructura sin *model.Module se debería crear objeto pero no ingresarlo
 	type stock struct {
-		Object *model.Object
-		Id     string
-		Name   string `Legend:"Nombre"`
+		*model.Object
+		Id   string
+		Name string `Legend:"Nombre"`
 	}
 
 	s := &stock{}

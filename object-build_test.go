@@ -31,7 +31,7 @@ func TestBuildOneObject(t *testing.T) {
 	}
 
 	obj_expected := &model.Object{
-		Name:                "user",
+		ObjectName:          "user",
 		Table:               "user",
 		PrincipalFieldsName: []string{"id", "name"},
 		Fields: []model.Field{

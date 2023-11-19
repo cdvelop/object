@@ -11,7 +11,7 @@ func AreIdentical(obj1, obj2 *model.Object) bool {
 	// fmt.Println("OBJETO 1", obj1.Name)
 	// fmt.Println("OBJETO 2", obj2.Name)
 
-	if obj1.Name != obj2.Name || len(obj1.Fields) != len(obj2.Fields) {
+	if obj1.ObjectName != obj2.ObjectName || len(obj1.Fields) != len(obj2.Fields) {
 		return false
 	}
 

@@ -10,11 +10,11 @@ import (
 )
 
 type Patient struct {
-	Id      string
-	Name    string
-	address string // campo en minúscula no se asignara su valor
-	Phone   int
-	Email   string `Legend:"Correo" Input:"Text"` // solo este campo se creara en el objeto
+	Id          string
+	PatientName string
+	address     string // campo en minúscula no se asignara su valor
+	Phone       int
+	Email       string `Legend:"Correo" Input:"Text"` // solo este campo se creara en el objeto
 }
 
 func TestCompleteFieldValuesFromChildrenStructONE(t *testing.T) {
@@ -44,8 +44,8 @@ func TestCompleteFieldValuesFromChildrenStructONE(t *testing.T) {
 		t.Fatal("Se esperaba que doc.Id fuera 'id', pero es:", doc.Id)
 	}
 
-	if doc.Name != "name" {
-		t.Fatal("Se esperaba que doc.Name fuera 'name', pero es:", doc.Name)
+	if doc.PatientName != "patientname" {
+		t.Fatal("Se esperaba que doc.PatientName fuera 'patientname', pero es:", doc.Patient.PatientName)
 	}
 	if doc.Phone != 0 {
 		t.Fatal("Se esperaba que doc.Phone fuera '0', pero es:", doc.Phone)
@@ -57,9 +57,9 @@ func TestCompleteFieldValuesFromChildrenStructONE(t *testing.T) {
 
 	//1-  se espera la creación del campo Email
 	obj_expected := &model.Object{
-		Name:                module.ModuleName + ".document",
+		ObjectName:          module.ModuleName + ".document",
 		Table:               "document",
-		PrincipalFieldsName: []string{doc.Number, doc.Id, doc.Name, "phone", doc.Email},
+		PrincipalFieldsName: []string{doc.Number, doc.Id, doc.PatientName, "phone", doc.Email},
 		Fields: []model.Field{
 			{Name: doc.Email, Legend: "Correo", Input: module.Inputs[0]},
 		},
@@ -76,7 +76,7 @@ func TestCompleteFieldValuesFromChildrenStructONE(t *testing.T) {
 }
 
 func TestCompleteFieldValuesFromChildrenStructTWO(t *testing.T) {
-	// 2-  CASO DONDE NO SE NECESITA QUE SE CREEN LOS CAMPOS EN EL OBJETO
+	// 2-  CASO DONDE SE NECESITA integrar el modulo al objeto
 	handlers := &model.Handlers{}
 
 	module := &model.Module{
@@ -88,8 +88,8 @@ func TestCompleteFieldValuesFromChildrenStructTWO(t *testing.T) {
 	}
 
 	type document struct {
-		noAddObjectFields bool
-		Number            string
+		*model.Object
+		Number string
 		Patient
 	}
 
@@ -100,25 +100,16 @@ func TestCompleteFieldValuesFromChildrenStructTWO(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	// for _, o := range handlers.GetObjects() {
-
-	// fmt.Println("RESULTADO OBJETO:", o)
-	// fmt.Println("CAMPOS PRINCIPALES:", o.PrincipalFieldsName)
-
-	// }
-
-	obj_expected := &model.Object{
-		Name:                module.ModuleName + ".document",
-		Table:               "document",
-		PrincipalFieldsName: []string{doc.Number, doc.Id, doc.Name, "phone", doc.Email},
-		Module:              module,
-	}
-
-	obj_result := handlers.GetObjects()[0]
-	if !object.AreIdentical(obj_result, obj_expected) {
-		fmt.Printf("\n-se esperaba:\n%v\n\n-pero se obtuvo:\n%v\n", obj_expected, obj_result)
-		t.Fatal()
+	if doc.Object == nil {
+		t.Fatal("se esperaba que el objeto no sea nulo pero es", doc.Object)
 		return
 	}
+
+	if doc.Handlers == nil {
+		t.Fatal("se esperaba que Handlers no sea nulo pero es", doc.Handlers)
+		return
+	}
+
+	// fmt.Println("RESULTADO OBJETO:", doc.ObjectName, "Modulo:", doc.ModuleName)
 
 }

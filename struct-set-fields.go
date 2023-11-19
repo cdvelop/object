@@ -27,11 +27,6 @@ func (sf *structFound) setStructField() error {
 				add_principal_field = true
 			}
 
-			if fieldType.Kind() == reflect.Bool && name_value == "noAddObjectFields" {
-				noAddObjectFields = true
-				// fmt.Println("CAMPO BOOL:", name_value, "VALOR:", field.Bool())
-			}
-
 		case reflect.Ptr: //campo puntero
 
 			if name_value == "Object" && fieldType == reflect.TypeOf((*model.Object)(nil)) {
@@ -42,28 +37,27 @@ func (sf *structFound) setStructField() error {
 			}
 
 		case reflect.Struct: // campo estructura
-			// Crear una instancia vacía del tipo subyacente
-			// fmt.Println("CAMPOS ESTRUCTURA HIJA:", daughterStruct)
-			daughterStruct := reflect.New(fieldType).Elem()
-
-			new_st_Found := structFound{
-				struct_int: daughterStruct.Addr().Interface(),
-				struct_ref: fieldType,
-				o:          sf.o,
-			}
-
-			err := new_st_Found.setStructField()
-			if err != nil {
-				return err
-			}
-
 			// fmt.Println("EL CAMPO:", name_value, "ES OTRA ESTRUCTURA")
-			// Llamar a la función que procesará la estructura hija
-			// err := SetFieldsStructToSameName(daughterStruct.Addr().Interface())
-			// if err != nil {
-			// 	return err
-			// }
-			field.Set(daughterStruct)
+			if name_value != "Module" && name_value != "Handlers" {
+
+				// fmt.Println("CAMPOS ESTRUCTURA HIJA:", daughterStruct)
+				daughterStruct := reflect.New(fieldType).Elem()
+
+				new_st_Found := structFound{
+					struct_int: daughterStruct.Addr().Interface(),
+					struct_ref: fieldType,
+					o:          sf.o,
+				}
+
+				// Llamar a la función que procesará la estructura hija
+				err := new_st_Found.setStructField()
+				if err != nil {
+					return err
+				}
+
+				field.Set(daughterStruct)
+
+			}
 
 		case reflect.String: // campo tipo string
 			if setValueReflectStringField(&name_value, &field) {
@@ -94,28 +88,24 @@ func (sf *structFound) setStructField() error {
 }
 
 func (sf structFound) addObjectFields(name_value string, fieldTag reflect.StructTag) error {
-	// fmt.Println("VALOR noAddObjectFields", noAddObjectFields)
 
-	if !noAddObjectFields {
+	new_field := model.Field{
+		Name: name_value,
+	}
 
-		new_field := model.Field{
-			Name: name_value,
-		}
-
-		for _, name := range getModelFieldNames() {
-			value := fieldTag.Get(name)
-			if value != "" {
-				err := sf.setFieldFromTags(&new_field, value, name)
-				if err != nil {
-					return err
-				}
+	for _, name := range getModelFieldNames() {
+		value := fieldTag.Get(name)
+		if value != "" {
+			err := sf.setFieldFromTags(&new_field, value, name)
+			if err != nil {
+				return err
 			}
 		}
+	}
 
-		if fieldTag.Get("Legend") != "" {
+	if fieldTag.Get("Legend") != "" {
 
-			sf.o.Fields = append(sf.o.Fields, new_field)
-		}
+		sf.o.Fields = append(sf.o.Fields, new_field)
 	}
 
 	return nil
