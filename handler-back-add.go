@@ -8,23 +8,23 @@ func addBackHandlers(o *model.Object, new_struct interface{}) {
 
 	if _, ok := new_struct.(model.BootResponse); ok {
 		// fmt.Println("ESTRUCTURA", o.ObjectName, "CONTIENE BackendHandler BootResponse")
-		o.BootResponse = new_struct.(model.BootResponse)
+		o.ObjectBackend.BootResponse = new_struct.(model.BootResponse)
 	}
 	if _, ok := new_struct.(model.CreateApi); ok {
 		// fmt.Println("ESTRUCTURA", o.ObjectName, "CONTIENE BackendHandler CreateApi")
-		o.CreateApi = new_struct.(model.CreateApi)
+		o.ObjectBackend.CreateApi = new_struct.(model.CreateApi)
 	}
 	if _, ok := new_struct.(model.ReadApi); ok {
 		// fmt.Println("ESTRUCTURA", o.ObjectName, "CONTIENE BackendHandler ReadApi")
-		o.ReadApi = new_struct.(model.ReadApi)
+		o.ObjectBackend.ReadApi = new_struct.(model.ReadApi)
 	}
 	if _, ok := new_struct.(model.UpdateApi); ok {
 		// fmt.Println("ESTRUCTURA", o.ObjectName, "CONTIENE BackendHandler UpdateApi")
-		o.UpdateApi = new_struct.(model.UpdateApi)
+		o.ObjectBackend.UpdateApi = new_struct.(model.UpdateApi)
 	}
 	if _, ok := new_struct.(model.DeleteApi); ok {
 		// fmt.Println("ESTRUCTURA", o.ObjectName, "CONTIENE BackendHandler DeleteApi")
-		o.DeleteApi = new_struct.(model.DeleteApi)
+		o.ObjectBackend.DeleteApi = new_struct.(model.DeleteApi)
 	}
 
 }

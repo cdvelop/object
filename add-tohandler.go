@@ -11,7 +11,6 @@ func AddToHandlerFromStructs(model_structs ...interface{}) error {
 	// agregamos el modulo al manejador solo si el modulo fue ingresado
 	if module != nil && handlers != nil {
 		handlers.AddModules(module)
-		module.Handlers = handlers
 	}
 
 	for _, sf := range st_founds {
@@ -24,6 +23,7 @@ func AddToHandlerFromStructs(model_structs ...interface{}) error {
 		// agregamos el nuevo objeto al manejador solo si el modulo  y el manejador es valido
 		if handlers != nil && module != nil {
 			handlers.AddObjects(new_object)
+			module.Handlers = handlers
 		}
 
 	}

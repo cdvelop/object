@@ -31,9 +31,9 @@ func TestBuildOneObject(t *testing.T) {
 	}
 
 	obj_expected := &model.Object{
-		ObjectName:          "user",
-		Table:               "user",
-		PrincipalFieldsName: []string{"id", "name"},
+		ObjectName: "user",
+		Table:      "user",
+		// PrincipalFieldsName: []string{"id", "name"},
 		Fields: []model.Field{
 			// {Name: "id"},
 			{Name: "name", Legend: "Nombre", Input: input_text},

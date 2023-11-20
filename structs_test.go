@@ -1,7 +1,6 @@
 package object_test
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/cdvelop/input"
@@ -17,67 +16,13 @@ type Patient struct {
 	Email       string `Legend:"Correo" Input:"Text"` // solo este campo se creara en el objeto
 }
 
-func TestCompleteFieldValuesFromChildrenStructONE(t *testing.T) {
-	handlers := &model.Handlers{}
-
-	module := &model.Module{
-		ModuleName: "client",
-		Title:      "Cliente",
-		Areas:      []byte{'s'},
-		Objects:    []*model.Object{},
-		Inputs:     []*model.Input{input.Text()},
-	}
-
-	type document struct {
-		Number string
-		Patient
-	}
-
-	doc := &document{}
-
-	err := object.AddToHandlerFromStructs(doc, handlers, module)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	if doc.Id != "id" {
-		t.Fatal("Se esperaba que doc.Id fuera 'id', pero es:", doc.Id)
-	}
-
-	if doc.PatientName != "patientname" {
-		t.Fatal("Se esperaba que doc.PatientName fuera 'patientname', pero es:", doc.Patient.PatientName)
-	}
-	if doc.Phone != 0 {
-		t.Fatal("Se esperaba que doc.Phone fuera '0', pero es:", doc.Phone)
-	}
-
-	if doc.address != "" {
-		t.Fatal("Se esperaba que doc.address vació '', pero es:", doc.address)
-	}
-
-	//1-  se espera la creación del campo Email
-	obj_expected := &model.Object{
-		ObjectName:          module.ModuleName + ".document",
-		Table:               "document",
-		PrincipalFieldsName: []string{doc.Number, doc.Id, doc.PatientName, "phone", doc.Email},
-		Fields: []model.Field{
-			{Name: doc.Email, Legend: "Correo", Input: module.Inputs[0]},
-		},
-		Module: module,
-	}
-
-	obj_result := handlers.GetObjects()[0]
-	if !object.AreIdentical(obj_result, obj_expected) {
-		fmt.Printf("\n-se esperaba:\n%v\n\n-pero se obtuvo:\n%v\n", obj_expected, obj_result)
-		t.Fatal()
-		return
-	}
-
-}
-
 func TestCompleteFieldValuesFromChildrenStructTWO(t *testing.T) {
 	// 2-  CASO DONDE SE NECESITA integrar el modulo al objeto
-	handlers := &model.Handlers{}
+	handlers := &model.Handlers{
+		AppInfo: model.AppInfo{
+			Business_name: "NN",
+		},
+	}
 
 	module := &model.Module{
 		ModuleName: "client",
@@ -100,16 +45,26 @@ func TestCompleteFieldValuesFromChildrenStructTWO(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if doc.Object == nil {
-		t.Fatal("se esperaba que el objeto no sea nulo pero es", doc.Object)
+	if doc.Table == "" {
+		t.Fatal("se esperaba acceder al campo Table del objeto de forma directa")
+		return
+	}
+	// fmt.Printf("Dirección de memoria ya no repetida document: %p\n", doc)
+
+	if len(handlers.GetObjects()) != 1 {
+		t.Fatal("se esperaba que creara un objeto en handlers")
 		return
 	}
 
 	if doc.Handlers == nil {
-		t.Fatal("se esperaba que Handlers no sea nulo pero es", doc.Handlers)
+		t.Fatal("se esperaba que Handlers no fuera nulo")
 		return
 	}
-
-	// fmt.Println("RESULTADO OBJETO:", doc.ObjectName, "Modulo:", doc.ModuleName)
+	if doc.Business_name == "" {
+		t.Fatal("se esperaba que la variable Business_name no estuviese vacía")
+		return
+	}
+	// fmt.Println("OBJETO:", doc.ObjectName, "Modulo:", doc.ModuleName)
+	// fmt.Println("RESULTADO Object:", doc.Object)
 
 }

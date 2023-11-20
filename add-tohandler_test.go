@@ -108,18 +108,17 @@ func TestBuildObjectFromStruct(t *testing.T) {
 			model_struct: []interface{}{new_person},
 			expected: []*model.Object{
 				{
-					ObjectName:          mod_one.ModuleName + ".person",
-					Table:               "person",
-					PrincipalFieldsName: []string{"id_person", "age", "address", "cars", "other"},
+					ObjectName: mod_one.ModuleName + ".person",
+					Table:      "person",
 					Fields: []model.Field{
 						{Name: "id_person", Legend: "Id", Input: unixid.InputPK()},
 						{Name: "address", Legend: "Dirección", Input: input.Text()},
 						{Name: "cars", Legend: "Vehículos", Input: input.Text(), SourceTable: "cars"},
 						// {Name: "other"},
 					},
-					Module:          mod_one,
-					BackendHandler:  model.BackendHandler{DeleteApi: new_person},
-					FrontendHandler: model.FrontendHandler{AfterDelete: new_person},
+					Module:         mod_one,
+					ObjectBackend:  model.BackendHandler{DeleteApi: new_person},
+					ObjectFrontend: model.FrontendHandler{AfterDelete: new_person},
 				},
 			},
 			err: "",
@@ -140,10 +139,10 @@ func TestBuildObjectFromStruct(t *testing.T) {
 			model_struct: []interface{}{new_staff3},
 			expected: []*model.Object{
 				{
-					ObjectName:     mod_three.ModuleName + ".staff",
-					Table:          "staff",
-					Module:         mod_three,
-					BackendHandler: model.BackendHandler{DeleteApi: new_staff3},
+					ObjectName:    mod_three.ModuleName + ".staff",
+					Table:         "staff",
+					Module:        mod_three,
+					ObjectBackend: model.BackendHandler{DeleteApi: new_staff3},
 				},
 			},
 			err: "",
@@ -154,10 +153,10 @@ func TestBuildObjectFromStruct(t *testing.T) {
 			model_struct: []interface{}{new_staff4, new_user4},
 			expected: []*model.Object{
 				{
-					ObjectName:     mod_four.ModuleName + ".staff",
-					Table:          "staff",
-					Module:         mod_four,
-					BackendHandler: model.BackendHandler{DeleteApi: new_staff4},
+					ObjectName:    mod_four.ModuleName + ".staff",
+					Table:         "staff",
+					Module:        mod_four,
+					ObjectBackend: model.BackendHandler{DeleteApi: new_staff4},
 				},
 				{
 					ObjectName: mod_four.ModuleName + ".user",

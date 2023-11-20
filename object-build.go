@@ -20,11 +20,9 @@ func (sf *structFound) buildObject(module *model.Module) (*model.Object, error) 
 	}
 
 	sf.o = &model.Object{
-		ObjectName:      module_name + obj_name,
-		Table:           obj_name,
-		Module:          module, // se permite modulo nulo, solo que no sera agregado a ningún lado, util para crear tablas con el objeto
-		BackendHandler:  model.BackendHandler{},
-		FrontendHandler: model.FrontendHandler{},
+		ObjectName: module_name + obj_name,
+		Table:      obj_name,
+		Module:     module,
 	}
 
 	err := sf.setStructField()

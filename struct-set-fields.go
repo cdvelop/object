@@ -4,7 +4,6 @@ import (
 	"reflect"
 
 	"github.com/cdvelop/model"
-	"github.com/cdvelop/strings"
 )
 
 func (sf *structFound) setStructField() error {
@@ -13,19 +12,13 @@ func (sf *structFound) setStructField() error {
 	structValue := reflect.New(sf.struct_ref).Elem()
 
 	for i := 0; i < structValue.NumField(); i++ {
-		var add_principal_field bool
 		field := structValue.Field(i)
 		fieldType := field.Type()
 
 		name_value := sf.struct_ref.Field(i).Name
 
 		switch fieldType.Kind() {
-
-		// tipos de campos mas usados
-		case reflect.Bool, reflect.Int, reflect.Int64:
-			if _, ok := strings.VALID_LETTERS[name_value[0]]; ok {
-				add_principal_field = true
-			}
+		// case reflect.Bool, reflect.Int, reflect.Int64:
 
 		case reflect.Ptr: //campo puntero
 
@@ -37,31 +30,32 @@ func (sf *structFound) setStructField() error {
 			}
 
 		case reflect.Struct: // campo estructura
-			// fmt.Println("EL CAMPO:", name_value, "ES OTRA ESTRUCTURA")
-			if name_value != "Module" && name_value != "Handlers" {
 
-				// fmt.Println("CAMPOS ESTRUCTURA HIJA:", daughterStruct)
-				daughterStruct := reflect.New(fieldType).Elem()
-
-				new_st_Found := structFound{
-					struct_int: daughterStruct.Addr().Interface(),
-					struct_ref: fieldType,
-					o:          sf.o,
-				}
-
-				// Llamar a la función que procesará la estructura hija
-				err := new_st_Found.setStructField()
-				if err != nil {
-					return err
-				}
-
-				field.Set(daughterStruct)
-
+			if knownName(name_value) {
+				continue
 			}
+			// fmt.Println("EL CAMPO:", name_value, "ES OTRA ESTRUCTURA")
+
+			// fmt.Println("CAMPOS ESTRUCTURA HIJA:", daughterStruct)
+			daughterStruct := reflect.New(fieldType).Elem()
+
+			new_st_Found := structFound{
+				struct_int: daughterStruct.Addr().Interface(),
+				struct_ref: fieldType,
+				o:          sf.o,
+			}
+
+			// Llamar a la función que procesará la estructura hija
+			err := new_st_Found.setStructField()
+			if err != nil {
+				return err
+			}
+
+			field.Set(daughterStruct)
 
 		case reflect.String: // campo tipo string
 			if setValueReflectStringField(&name_value, &field) {
-				add_principal_field = true
+				// add_principal_field = true
 				// Obtener y mostrar el valor de la etiqueta del campo
 				fieldTag := sf.struct_ref.Field(i).Tag
 
@@ -70,12 +64,8 @@ func (sf *structFound) setStructField() error {
 					return err
 				}
 			}
-
 		}
-
-		sf.addPrincipalField(name_value, add_principal_field)
 		// fmt.Println("VALOR NOMBRE:", name_value)
-
 	}
 
 	// Obtener una referencia a la interfaz original
@@ -109,13 +99,6 @@ func (sf structFound) addObjectFields(name_value string, fieldTag reflect.Struct
 	}
 
 	return nil
-}
-
-func (sf structFound) addPrincipalField(name_value string, add bool) {
-	if add && sf.o != nil {
-		new_name := strings.LowerCaseFirstLetter(name_value)
-		sf.o.PrincipalFieldsName = append(sf.o.PrincipalFieldsName, new_name)
-	}
 }
 
 func getModelFieldNames() (names []string) {
