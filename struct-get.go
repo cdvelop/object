@@ -7,6 +7,7 @@ import (
 )
 
 var handlers *model.Handlers
+var tests *model.Tests
 
 func getStructFromInterface(calling_function_name string, model_structs ...interface{}) (structs_found []*structFound, m *model.Module, err error) {
 
@@ -32,6 +33,10 @@ func getStructFromInterface(calling_function_name string, model_structs ...inter
 				handlers = handlers_found
 
 			} else {
+				if tests_found, ok := module_value.(*model.Tests); ok {
+					tests = tests_found
+				}
+
 				// puede que se enviaron las estructuras principales como punteros
 				// Obtén el tipo subyacente al puntero
 				elem_type := t.Elem()

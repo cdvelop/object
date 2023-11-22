@@ -4,13 +4,13 @@ go 1.20
 
 require (
 	github.com/cdvelop/input v0.0.43
-	github.com/cdvelop/model v0.0.69
+	github.com/cdvelop/model v0.0.70
 	github.com/cdvelop/unixid v0.0.9
 )
 
 require (
 	github.com/cdvelop/strings v0.0.7
-	github.com/cdvelop/timetools v0.0.9 // indirect
+	github.com/cdvelop/timetools v0.0.19 // indirect
 )
 
 replace github.com/cdvelop/model => ../model

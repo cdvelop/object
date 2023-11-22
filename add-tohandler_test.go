@@ -116,9 +116,9 @@ func TestBuildObjectFromStruct(t *testing.T) {
 						{Name: "cars", Legend: "Vehículos", Input: input.Text(), SourceTable: "cars"},
 						// {Name: "other"},
 					},
-					Module:         mod_one,
-					ObjectBackend:  model.BackendHandler{DeleteApi: new_person},
-					ObjectFrontend: model.FrontendHandler{AfterDelete: new_person},
+					Module:       mod_one,
+					BackHandler:  model.BackendHandler{DeleteApi: new_person},
+					FrontHandler: model.FrontendHandler{AfterDelete: new_person},
 				},
 			},
 			err: "",
@@ -139,10 +139,10 @@ func TestBuildObjectFromStruct(t *testing.T) {
 			model_struct: []interface{}{new_staff3},
 			expected: []*model.Object{
 				{
-					ObjectName:    mod_three.ModuleName + ".staff",
-					Table:         "staff",
-					Module:        mod_three,
-					ObjectBackend: model.BackendHandler{DeleteApi: new_staff3},
+					ObjectName:  mod_three.ModuleName + ".staff",
+					Table:       "staff",
+					Module:      mod_three,
+					BackHandler: model.BackendHandler{DeleteApi: new_staff3},
 				},
 			},
 			err: "",
@@ -153,10 +153,10 @@ func TestBuildObjectFromStruct(t *testing.T) {
 			model_struct: []interface{}{new_staff4, new_user4},
 			expected: []*model.Object{
 				{
-					ObjectName:    mod_four.ModuleName + ".staff",
-					Table:         "staff",
-					Module:        mod_four,
-					ObjectBackend: model.BackendHandler{DeleteApi: new_staff4},
+					ObjectName:  mod_four.ModuleName + ".staff",
+					Table:       "staff",
+					Module:      mod_four,
+					BackHandler: model.BackendHandler{DeleteApi: new_staff4},
 				},
 				{
 					ObjectName: mod_four.ModuleName + ".user",

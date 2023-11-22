@@ -25,11 +25,11 @@ func AreIdentical(obj1, obj2 *model.Object) bool {
 		return false
 	}
 
-	if obj1.ObjectFrontend != obj2.ObjectFrontend {
+	if obj1.FrontHandler != obj2.FrontHandler {
 		return false
 	}
 
-	if obj1.ObjectBackend != obj2.ObjectBackend {
+	if obj1.BackHandler != obj2.BackHandler {
 		return false
 	}
 

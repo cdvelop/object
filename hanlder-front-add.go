@@ -12,32 +12,32 @@ func addFrontHandlers(o *model.Object, new_struct interface{}) {
 
 	if _, ok := new_struct.(model.AfterCreate); ok {
 		// fmt.Println("ESTRUCTURA", o.ObjectName, "CONTIENE FrontendHandler AfterCreate")
-		o.ObjectFrontend.AfterCreate = new_struct.(model.AfterCreate)
+		o.FrontHandler.AfterCreate = new_struct.(model.AfterCreate)
 	}
 	if _, ok := new_struct.(model.AfterUpdate); ok {
 		// fmt.Println("ESTRUCTURA", o.ObjectName, "CONTIENE FrontendHandler AfterUpdate")
-		o.ObjectFrontend.AfterUpdate = new_struct.(model.AfterUpdate)
+		o.FrontHandler.AfterUpdate = new_struct.(model.AfterUpdate)
 	}
 	if _, ok := new_struct.(model.AfterDelete); ok {
 		// fmt.Println("ESTRUCTURA", o.ObjectName, "CONTIENE FrontendHandler AfterDelete")
-		o.ObjectFrontend.AfterDelete = new_struct.(model.AfterDelete)
+		o.FrontHandler.AfterDelete = new_struct.(model.AfterDelete)
 	}
 
 	if _, ok := new_struct.(model.AfterClicked); ok {
 		// fmt.Println("ESTRUCTURA", o.ObjectName, "CONTIENE FrontendHandler AfterClicked")
-		o.ObjectFrontend.AfterClicked = new_struct.(model.AfterClicked)
+		o.FrontHandler.AfterClicked = new_struct.(model.AfterClicked)
 	}
 
 	if _, ok := new_struct.(model.NotifyBootData); ok {
-		o.ObjectFrontend.NotifyBootData = new_struct.(model.NotifyBootData)
+		o.FrontHandler.NotifyBootData = new_struct.(model.NotifyBootData)
 	}
 
-	if _, ok := new_struct.(model.ViewHandler); ok {
-		o.ObjectFrontend.ViewHandler = new_struct.(model.ViewHandler)
+	if _, ok := new_struct.(model.ViewAdapter); ok {
+		o.FrontHandler.ViewAdapter = new_struct.(model.ViewAdapter)
 	}
 
-	if _, ok := new_struct.(model.ViewReset); ok {
-		o.ObjectFrontend.ViewReset = new_struct.(model.ViewReset)
+	if _, ok := new_struct.(model.ResetViewObjectAdapter); ok {
+		o.FrontHandler.ResetViewObjectAdapter = new_struct.(model.ResetViewObjectAdapter)
 	}
 
 }
