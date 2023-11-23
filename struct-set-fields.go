@@ -6,7 +6,7 @@ import (
 	"github.com/cdvelop/model"
 )
 
-func (sf *structFound) setStructField() error {
+func (sf *structFound) setStructField() (err string) {
 
 	// Crear una instancia vacía del tipo subyacente
 	structValue := reflect.New(sf.struct_ref).Elem()
@@ -46,9 +46,9 @@ func (sf *structFound) setStructField() error {
 			}
 
 			// Llamar a la función que procesará la estructura hija
-			err := new_st_Found.setStructField()
-			if err != nil {
-				return err
+			err = new_st_Found.setStructField()
+			if err != "" {
+				return
 			}
 
 			field.Set(daughterStruct)
@@ -60,7 +60,7 @@ func (sf *structFound) setStructField() error {
 				fieldTag := sf.struct_ref.Field(i).Tag
 
 				err := sf.addObjectFields(name_value, fieldTag)
-				if err != nil {
+				if err != "" {
 					return err
 				}
 			}
@@ -74,10 +74,10 @@ func (sf *structFound) setStructField() error {
 	// Actualizar el valor en la interfaz con la estructura modificada
 	interfaceValue.Elem().Set(structValue)
 
-	return nil
+	return ""
 }
 
-func (sf structFound) addObjectFields(name_value string, fieldTag reflect.StructTag) error {
+func (sf structFound) addObjectFields(name_value string, fieldTag reflect.StructTag) (err string) {
 
 	new_field := model.Field{
 		Name: name_value,
@@ -87,7 +87,7 @@ func (sf structFound) addObjectFields(name_value string, fieldTag reflect.Struct
 		value := fieldTag.Get(name)
 		if value != "" {
 			err := sf.setFieldFromTags(&new_field, value, name)
-			if err != nil {
+			if err != "" {
 				return err
 			}
 		}
@@ -98,7 +98,7 @@ func (sf structFound) addObjectFields(name_value string, fieldTag reflect.Struct
 		sf.o.Fields = append(sf.o.Fields, new_field)
 	}
 
-	return nil
+	return ""
 }
 
 func getModelFieldNames() (names []string) {

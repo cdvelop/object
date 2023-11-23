@@ -24,10 +24,10 @@ type person struct {
 	Other      string // no tiene ninguna etiqueta solo se le asigna como valor el nombre se su campo y como campo principal
 }
 
-func (person) SetObjectInDomAfterDelete(data ...map[string]string) (err error) {
+func (person) SetObjectInDomAfterDelete(data ...map[string]string) (err string) {
 	return
 }
-func (person) Delete(u *model.User, data ...map[string]string) (out []map[string]string, err error) {
+func (person) Delete(u *model.User, data ...map[string]string) (err string) {
 	return
 }
 
@@ -40,7 +40,7 @@ type staff struct {
 	other *model.Field
 }
 
-func (staff) Delete(u *model.User, data ...map[string]string) (out []map[string]string, err error) {
+func (staff) Delete(u *model.User, data ...map[string]string) (err string) {
 	return
 }
 
@@ -196,9 +196,9 @@ func TestBuildObjectFromStruct(t *testing.T) {
 			new_data = append(new_data, data.handlers)
 
 			err := object.AddToHandlerFromStructs(new_data...)
-			if err != nil {
-				if data.err != err.Error() {
-					log.Fatalf("\n-mensaje error diferente:\n-se esperaba:%v\n-pero se obtuvo:\n%v\n", data.err, err.Error())
+			if err != "" {
+				if data.err != err {
+					log.Fatalf("\n-mensaje error diferente:\n-se esperaba:%v\n-pero se obtuvo:\n%v\n", data.err, err)
 				}
 			} else {
 
@@ -258,7 +258,7 @@ func TestStructWhitOutModule(t *testing.T) {
 	s := &stock{}
 
 	err := object.AddToHandlerFromStructs(s)
-	if err != nil {
+	if err != "" {
 		t.Fatal(err)
 	}
 	// fmt.Println("RESULTADO:", f)

@@ -1,10 +1,10 @@
 package object
 
 // arguments: main struct and *model.Module. inputs: []*model.Input, *model.Handlers
-func AddToHandlerFromStructs(model_structs ...interface{}) error {
+func AddToHandlerFromStructs(model_structs ...interface{}) (err string) {
 
 	st_founds, module, err := getStructFromInterface("AddToHandlerFromStructs", model_structs...)
-	if err != nil {
+	if err != "" {
 		return err
 	}
 
@@ -20,7 +20,7 @@ func AddToHandlerFromStructs(model_structs ...interface{}) error {
 	for _, sf := range st_founds {
 
 		new_object, err := sf.buildObject(module)
-		if err != nil {
+		if err != "" {
 			return err
 		}
 
@@ -32,5 +32,5 @@ func AddToHandlerFromStructs(model_structs ...interface{}) error {
 
 	}
 
-	return nil
+	return ""
 }

@@ -3,14 +3,14 @@ module github.com/cdvelop/object
 go 1.20
 
 require (
-	github.com/cdvelop/input v0.0.43
-	github.com/cdvelop/model v0.0.70
-	github.com/cdvelop/unixid v0.0.9
+	github.com/cdvelop/input v0.0.54
+	github.com/cdvelop/model v0.0.71
+	github.com/cdvelop/unixid v0.0.20
 )
 
 require (
 	github.com/cdvelop/strings v0.0.7
-	github.com/cdvelop/timetools v0.0.19 // indirect
+	github.com/cdvelop/timetools v0.0.20 // indirect
 )
 
 replace github.com/cdvelop/model => ../model

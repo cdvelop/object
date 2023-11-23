@@ -9,7 +9,7 @@ import (
 var handlers *model.Handlers
 var tests *model.Tests
 
-func getStructFromInterface(calling_function_name string, model_structs ...interface{}) (structs_found []*structFound, m *model.Module, err error) {
+func getStructFromInterface(calling_function_name string, model_structs ...interface{}) (structs_found []*structFound, m *model.Module, err string) {
 
 	for _, st := range model_structs {
 
@@ -19,7 +19,7 @@ func getStructFromInterface(calling_function_name string, model_structs ...inter
 
 		case reflect.Struct:
 
-			return nil, nil, model.Error("error debes de ingresar las estructuras como punteros en", calling_function_name)
+			return nil, nil, "error debes de ingresar las estructuras como punteros en " + calling_function_name
 
 		case reflect.Ptr:
 
@@ -55,7 +55,7 @@ func getStructFromInterface(calling_function_name string, model_structs ...inter
 	}
 
 	if len(structs_found) == 0 {
-		return nil, nil, model.Error("error ninguna estructura valida ingresada en", calling_function_name)
+		return nil, nil, "error ninguna estructura valida ingresada en " + calling_function_name
 	}
 
 	return

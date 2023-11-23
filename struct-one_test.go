@@ -28,7 +28,7 @@ func TestCompleteFieldValuesFromChildrenStructONE(t *testing.T) {
 	doc := &document{}
 
 	err := object.AddToHandlerFromStructs(doc, handlers, module)
-	if err != nil {
+	if err != "" {
 		t.Fatal(err)
 	}
 

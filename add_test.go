@@ -13,7 +13,7 @@ func Test_Validate(t *testing.T) {
 
 			err := object.ValidateData(data.ItsNew, data.ItsUpdate, data.Data)
 
-			if err == nil {
+			if err == "" {
 				if data.Expected != "" {
 					log.Fatalf("\n=>expected:[%v]\n=>result:[%v]", data.Expected, err)
 				}

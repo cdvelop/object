@@ -44,7 +44,7 @@ func TestBuildOneObject(t *testing.T) {
 	u := &user{}
 
 	obj_resp, err := object.BuildObjectFromStruct(u, module)
-	if err != nil {
+	if err != "" {
 		t.Fatal(err)
 	}
 

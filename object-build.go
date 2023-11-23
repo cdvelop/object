@@ -5,10 +5,10 @@ import (
 	"github.com/cdvelop/strings"
 )
 
-func (sf *structFound) buildObject(module *model.Module) (*model.Object, error) {
+func (sf *structFound) buildObject(module *model.Module) (o *model.Object, err string) {
 
 	if sf == nil {
-		return nil, model.Error("estructura nil en buildObject")
+		return nil, "estructura nil en buildObject"
 	}
 
 	obj_name := strings.ToLowerCaseAlphabet(sf.struct_ref.Name())
@@ -25,8 +25,8 @@ func (sf *structFound) buildObject(module *model.Module) (*model.Object, error) 
 		Module:     module,
 	}
 
-	err := sf.setStructField()
-	if err != nil {
+	err = sf.setStructField()
+	if err != "" {
 		return nil, err
 	}
 
@@ -40,5 +40,5 @@ func (sf *structFound) buildObject(module *model.Module) (*model.Object, error) 
 		module.Objects = append(module.Objects, sf.o)
 	}
 
-	return sf.o, nil
+	return sf.o, ""
 }

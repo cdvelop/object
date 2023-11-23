@@ -3,21 +3,18 @@ package object
 import "github.com/cdvelop/model"
 
 // *model.Module optional
-func BuildObjectFromStruct(model_struct ...interface{}) (*model.Object, error) {
+func BuildObjectFromStruct(model_struct ...interface{}) (new_object *model.Object, err string) {
 
 	st_found, module, err := getStructFromInterface("BuildObjectFromStruct", model_struct...)
-	if err != nil {
+	if err != "" {
 		return nil, err
 	}
 
 	if len(st_found) != 1 {
-		return nil, model.Error("solo puedes ingresar una estructura para crear el objeto")
+		return nil, "solo puedes ingresar una estructura para crear el objeto"
 	}
 
-	new_object, err := st_found[0].buildObject(module)
-	if err != nil {
-		return nil, err
-	}
+	new_object, err = st_found[0].buildObject(module)
 
-	return new_object, nil
+	return
 }

@@ -14,7 +14,7 @@ func TestFileInputCase(t *testing.T) {
 	s := &stock{}
 
 	err := object.SetFieldsStructToSameName(s)
-	if err != nil {
+	if err != "" {
 		t.Fatal(err)
 	}
 

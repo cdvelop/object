@@ -3,11 +3,9 @@ package object
 import (
 	"reflect"
 	"strconv"
-
-	"github.com/cdvelop/model"
 )
 
-func (sf *structFound) setFieldFromTags(obj, value interface{}, tag_name string) error {
+func (sf *structFound) setFieldFromTags(obj, value interface{}, tag_name string) (err string) {
 	// Obtener el valor reflect.Value de obj
 	val := reflect.ValueOf(obj).Elem()
 
@@ -20,20 +18,20 @@ func (sf *structFound) setFieldFromTags(obj, value interface{}, tag_name string)
 
 	// Verificar si el campo existe y es exportado
 	if !field.IsValid() || !field.CanSet() {
-		return model.Error("Campo", tag_name, "no encontrado o no se puede modificar")
+		return "Campo " + tag_name + " no encontrado o no se puede modificar"
 	}
 
 	switch field_type {
 	case "string":
 		if valueType, ok := value.(string); ok {
 			field.SetString(valueType)
-			return nil
+			return ""
 		}
 
 	case "int":
 		if valueType, ok := value.(int); ok {
 			field.SetInt(int64(valueType))
-			return nil
+			return ""
 		}
 
 	case "bool":
@@ -50,7 +48,7 @@ func (sf *structFound) setFieldFromTags(obj, value interface{}, tag_name string)
 
 		if err == nil {
 			field.SetBool(bool_value)
-			return nil
+			return ""
 		}
 
 	case "*model.Input":
@@ -66,7 +64,7 @@ func (sf *structFound) setFieldFromTags(obj, value interface{}, tag_name string)
 					ptrValue := reflect.ValueOf(mod)
 					// Asignar el valor del puntero al campo
 					field.Set(ptrValue)
-					return nil
+					return ""
 				}
 			}
 		}
@@ -74,5 +72,5 @@ func (sf *structFound) setFieldFromTags(obj, value interface{}, tag_name string)
 
 	}
 
-	return model.Error(tag_name, value_in, "Tipo:", field_type, ", no existe en objeto:", sf.o.ObjectName)
+	return tag_name + " " + value_in + " Tipo: " + field_type + ", no existe en objeto:" + sf.o.ObjectName
 }

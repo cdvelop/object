@@ -11,8 +11,9 @@ func Test_GetDataTestObject(t *testing.T) {
 
 	all_data, err := Object1().TestData(required, false, false)
 
-	if err != nil {
-		log.Fatal(err)
+	if err != "" {
+		t.Fatal(err)
+		return
 	}
 
 	// fmt.Println("DATA OBTENIDA: ", all_data)
@@ -29,8 +30,9 @@ func Test_GetDataTestObject(t *testing.T) {
 
 	// 2 prueba saltándose el id
 	all_data2, err := Object1().TestData(required, true, false)
-	if err != nil {
+	if err != "" {
 		t.Fatal(err)
+		return
 	}
 
 	expected := len(Object1().Fields) - 1
