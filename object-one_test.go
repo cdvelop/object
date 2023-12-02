@@ -15,14 +15,13 @@ func TestBuildOneObject(t *testing.T) {
 	input_text := input.Text()
 
 	module := &model.Module{
-		ModuleName:        "",
-		Title:             "",
-		IconID:            "",
-		UI:                nil,
-		HeaderInputTarget: "",
-		Areas:             []byte{},
-		Objects:           []*model.Object{},
-		Inputs:            []*model.Input{input_text},
+		ModuleName: "",
+		Title:      "",
+		IconID:     "",
+		UI:         nil,
+		Areas:      map[string]string{},
+		Objects:    []*model.Object{},
+		Inputs:     []*model.Input{input_text},
 	}
 
 	type user struct {

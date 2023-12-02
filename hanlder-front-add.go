@@ -39,5 +39,8 @@ func addFrontHandlers(o *model.Object, new_struct interface{}) {
 	if _, ok := new_struct.(model.ResetViewObjectAdapter); ok {
 		o.FrontHandler.ResetViewObjectAdapter = new_struct.(model.ResetViewObjectAdapter)
 	}
+	if _, ok := new_struct.(model.NotifyFormComplete); ok {
+		o.FrontHandler.NotifyFormComplete = new_struct.(model.NotifyFormComplete)
+	}
 
 }

@@ -27,7 +27,7 @@ func TestCompleteFieldValuesFromChildrenStructTWO(t *testing.T) {
 	module := &model.Module{
 		ModuleName: "client",
 		Title:      "Cliente",
-		Areas:      []byte{'s'},
+		Areas:      map[string]string{"s": "OK"},
 		Objects:    []*model.Object{},
 		Inputs:     []*model.Input{input.Text()},
 	}
