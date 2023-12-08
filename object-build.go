@@ -11,7 +11,7 @@ func (sf *structFound) buildObject(module *model.Module) (o *model.Object, err s
 		return nil, "estructura nil en buildObject"
 	}
 
-	obj_name := strings.ToLowerCaseAlphabet(sf.struct_ref.Name())
+	obj_name := strings.ToLowerCase(sf.struct_ref.Name())
 
 	var module_name string
 

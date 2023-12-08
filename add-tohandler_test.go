@@ -57,13 +57,13 @@ type stock struct {
 func TestBuildObjectFromStruct(t *testing.T) {
 
 	handlers := &model.Handlers{
-		ThemeAdapter:    nil,
-		DataBaseAdapter: nil,
-		TimeAdapter:     nil,
-		DomAdapter:      nil,
-		FetchAdapter:    nil,
-		AuthAdapter:     nil,
-		Logger:          nil,
+		ThemeAdapter:       nil,
+		DataBaseAdapter:    nil,
+		TimeAdapter:        nil,
+		DomAdapter:         nil,
+		FetchAdapter:       nil,
+		AuthBackendAdapter: nil,
+		Logger:             nil,
 	}
 
 	add_inputs := []*model.Input{
