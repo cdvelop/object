@@ -1,8 +1,6 @@
 package object
 
 import (
-	"fmt"
-
 	"github.com/cdvelop/model"
 )
 
@@ -30,7 +28,7 @@ func knownName(name string) bool {
 		// fmt.Println("object_fields", object_fields)
 	}
 
-	fmt.Println("CAMPO CONOCIDO?:", name)
+	// fmt.Println("CAMPO CONOCIDO?:", name)
 
 	for _, n := range object_fields {
 		if name == n {
