@@ -11,7 +11,7 @@ func setValueReflectStringField(name_value *string, field *reflect.Value) bool {
 
 		var new_name = *name_value
 		// que la primera letra sea mayúscula
-		if _, ok := strings.VALID_LETTERS[new_name[0]]; ok {
+		if _, ok := strings.LettersUpperLowerCase()[rune(new_name[0])]; ok {
 
 			new_name = strings.ToLowerCase(new_name)
 			// Asignar el nombre del campo como valor
@@ -21,5 +21,6 @@ func setValueReflectStringField(name_value *string, field *reflect.Value) bool {
 		}
 
 	}
+
 	return false
 }

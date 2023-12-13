@@ -4,6 +4,7 @@ import (
 	"reflect"
 
 	"github.com/cdvelop/model"
+	"github.com/cdvelop/strings"
 )
 
 func (sf *structFound) setStructField() (err string) {
@@ -16,6 +17,11 @@ func (sf *structFound) setStructField() (err string) {
 		fieldType := field.Type()
 
 		name_value := sf.struct_ref.Field(i).Name
+
+		// si la primera letra no es Mayúscula continuamos a la siguiente
+		if _, ok := strings.LettersUpperLowerCase()[rune(name_value[0])]; !ok {
+			continue
+		}
 
 		switch fieldType.Kind() {
 		// case reflect.Bool, reflect.Int, reflect.Int64:
