@@ -9,4 +9,4 @@ require (
 	github.com/cdvelop/unixid v0.0.30
 )
 
-require github.com/cdvelop/timetools v0.0.29 // indirect
+require github.com/cdvelop/timetools v0.0.30 // indirect
