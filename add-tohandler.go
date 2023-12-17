@@ -1,6 +1,6 @@
 package object
 
-// arguments: main struct and *model.Module. inputs: []*model.Input, *model.Handlers
+// arguments: main struct and *model.Module. inputs: []*model.Input, *model.MainHandler
 func AddToHandlerFromStructs(model_structs ...interface{}) (err string) {
 
 	st_founds, module, err := getStructFromInterface("AddToHandlerFromStructs", model_structs...)
@@ -23,8 +23,11 @@ func AddToHandlerFromStructs(model_structs ...interface{}) (err string) {
 
 		// agregamos el nuevo objeto al manejador solo si el modulo  y el manejador es valido
 		if handlers != nil && module != nil {
-			handlers.AddObjects(new_object)
-			module.Handlers = handlers
+			module.MainHandler = handlers
+
+			module.AddObjectsToModule(new_object)
+
+			handlers.AddModules(module)
 		}
 
 	}

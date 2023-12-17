@@ -56,7 +56,7 @@ type stock struct {
 
 func TestBuildObjectFromStruct(t *testing.T) {
 
-	handlers := &model.Handlers{
+	handlers := &model.MainHandler{
 		ThemeAdapter:          nil,
 		DataBaseAdapter:       nil,
 		TimeAdapter:           nil,
@@ -97,7 +97,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 
 	dataTest := map[string]struct {
 		module       *model.Module
-		handlers     *model.Handlers
+		handlers     *model.MainHandler
 		model_struct []interface{}
 		expected     []*model.Object
 		err          string

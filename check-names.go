@@ -10,8 +10,8 @@ var handlers_fields []string
 
 func knownName(name string) bool {
 	if handlers != nil && len(handlers_fields) == 0 {
-		names := model.GetFieldNamesFrom(model.Handlers{})
-		names = append(names, "Handlers")
+		names := model.GetFieldNamesFrom(model.MainHandler{})
+		names = append(names, "MainHandler")
 		handlers_fields = names
 	}
 

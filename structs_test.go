@@ -18,7 +18,7 @@ type Patient struct {
 
 func TestCompleteFieldValuesFromChildrenStructTWO(t *testing.T) {
 	// 2-  CASO DONDE SE NECESITA integrar el modulo al objeto
-	handlers := &model.Handlers{
+	handlers := &model.MainHandler{
 		AppInfo: model.AppInfo{
 			Business_name: "NN",
 		},
@@ -51,13 +51,13 @@ func TestCompleteFieldValuesFromChildrenStructTWO(t *testing.T) {
 	}
 	// fmt.Printf("Dirección de memoria ya no repetida document: %p\n", doc)
 
-	if len(handlers.GetObjects()) != 1 {
+	if len(handlers.GetAllObjectsFromMainHandler()) != 1 {
 		t.Fatal("se esperaba que creara un objeto en handlers")
 		return
 	}
 
-	if doc.Handlers == nil {
-		t.Fatal("se esperaba que Handlers no fuera nulo")
+	if doc.MainHandler == nil {
+		t.Fatal("se esperaba que MainHandler no fuera nulo")
 		return
 	}
 	if doc.Business_name == "" {

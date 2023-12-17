@@ -6,7 +6,7 @@ import (
 	"github.com/cdvelop/model"
 )
 
-var handlers *model.Handlers
+var handlers *model.MainHandler
 
 func getStructFromInterface(calling_function_name string, model_structs ...interface{}) (structs_found []*structFound, m *model.Module, err string) {
 
@@ -27,7 +27,7 @@ func getStructFromInterface(calling_function_name string, model_structs ...inter
 			if module_pointer, ok := module_value.(*model.Module); ok {
 				// fmt.Println("ESTRUCTURA ES UN PUNTERO MODULO: ", module_pointer)
 				m = module_pointer
-			} else if handlers_found, ok := module_value.(*model.Handlers); ok {
+			} else if handlers_found, ok := module_value.(*model.MainHandler); ok {
 				// fmt.Println("ESTRUCTURA ES handlers_found: ", module_pointer)
 				handlers = handlers_found
 

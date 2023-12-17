@@ -30,8 +30,8 @@ func (sf *structFound) setStructField() (err string) {
 
 			if name_value == "Object" && fieldType == reflect.TypeOf((*model.Object)(nil)) {
 				field.Set(reflect.ValueOf(sf.o)) // Asignar el campo "Object" a la estructura
-			} else if handlers != nil && name_value == "App" && fieldType == reflect.TypeOf((*model.Handlers)(nil)) {
-				field.Set(reflect.ValueOf(handlers)) // Asignar el campo "Handlers" a la estructura
+			} else if handlers != nil && name_value == "App" && fieldType == reflect.TypeOf((*model.MainHandler)(nil)) {
+				field.Set(reflect.ValueOf(handlers)) // Asignar el campo "MainHandler" a la estructura
 
 			}
 
