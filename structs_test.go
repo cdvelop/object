@@ -51,7 +51,7 @@ func TestCompleteFieldValuesFromChildrenStructTWO(t *testing.T) {
 	}
 	// fmt.Printf("Dirección de memoria ya no repetida document: %p\n", doc)
 
-	if len(handlers.GetAllObjectsFromMainHandler()) != 1 {
+	if len(handlers.MainHandlerGetAllObjects()) != 1 {
 		t.Fatal("se esperaba que creara un objeto en handlers")
 		return
 	}
