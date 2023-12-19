@@ -28,7 +28,6 @@ func TestCompleteFieldValuesFromChildrenStructTWO(t *testing.T) {
 		ModuleName: "client",
 		Title:      "Cliente",
 		Areas:      map[string]string{"s": "OK"},
-		Objects:    []*model.Object{},
 		Inputs:     []*model.Input{input.Text()},
 	}
 
@@ -51,7 +50,7 @@ func TestCompleteFieldValuesFromChildrenStructTWO(t *testing.T) {
 	}
 	// fmt.Printf("Dirección de memoria ya no repetida document: %p\n", doc)
 
-	if len(handlers.MainHandlerGetAllObjects()) != 1 {
+	if len(module.GetObjects()) != 1 {
 		t.Fatal("se esperaba que creara un objeto en handlers")
 		return
 	}

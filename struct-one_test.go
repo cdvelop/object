@@ -16,7 +16,6 @@ func TestCompleteFieldValuesFromChildrenStructONE(t *testing.T) {
 		ModuleName: "client",
 		Title:      "Cliente",
 		Areas:      map[string]string{"s": "OK"},
-		Objects:    []*model.Object{},
 		Inputs:     []*model.Input{input.Text()},
 	}
 
@@ -58,7 +57,7 @@ func TestCompleteFieldValuesFromChildrenStructONE(t *testing.T) {
 		Module: module,
 	}
 
-	obj_result := handlers.MainHandlerGetAllObjects()[0]
+	obj_result := module.GetObjects()[0]
 	if !object.AreIdentical(obj_result, obj_expected) {
 		fmt.Printf("\n-se esperaba:\n%v\n\n-pero se obtuvo:\n%v\n", obj_expected, obj_result)
 		t.Fatal()

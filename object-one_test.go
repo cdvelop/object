@@ -20,7 +20,6 @@ func TestBuildOneObject(t *testing.T) {
 		IconID:     "",
 		UI:         nil,
 		Areas:      map[string]string{},
-		Objects:    []*model.Object{},
 		Inputs:     []*model.Input{input_text},
 	}
 
@@ -55,7 +54,7 @@ func TestBuildOneObject(t *testing.T) {
 		log.Fatalln()
 	}
 
-	if len(module.Objects) != 1 {
+	if len(module.GetObjects()) != 1 {
 		fmt.Printf("error se esperaba que se agregara 1 objeto al modulo")
 		log.Fatalln()
 	}

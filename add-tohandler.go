@@ -10,7 +10,7 @@ func AddToHandlerFromStructs(model_structs ...interface{}) (err string) {
 
 	// agregamos el modulo al manejador solo si el modulo fue ingresado
 	if module != nil && handlers != nil {
-		handlers.MainHandlerAddModules(module)
+		handlers.AddModules(module)
 
 	}
 
@@ -27,7 +27,7 @@ func AddToHandlerFromStructs(model_structs ...interface{}) (err string) {
 
 			module.AddObjectsToModule(new_object)
 
-			handlers.MainHandlerAddModules(module)
+			handlers.AddModules(module)
 		}
 
 	}

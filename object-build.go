@@ -37,7 +37,7 @@ func (sf *structFound) buildObject(module *model.Module) (o *model.Object, err s
 	addBasicHandlers(sf.o, sf.struct_int)
 
 	if module != nil {
-		module.Objects = append(module.Objects, sf.o)
+		module.AddObjectsToModule(sf.o)
 	}
 
 	return sf.o, ""

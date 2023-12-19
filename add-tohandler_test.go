@@ -202,11 +202,11 @@ func TestBuildObjectFromStruct(t *testing.T) {
 				}
 			} else {
 
-				if len(data.expected) != len(data.module.Objects) {
+				if len(data.expected) != len(data.module.GetObjects()) {
 
-					fmt.Printf("-se esperaba:%v -pero se obtuvo:%v objeto(s)\n\n", len(data.expected), len(data.module.Objects))
+					fmt.Printf("-se esperaba:%v -pero se obtuvo:%v objeto(s)\n\n", len(data.expected), len(data.module.GetObjects()))
 
-					for i, o := range data.module.Objects {
+					for i, o := range data.module.GetObjects() {
 						fmt.Println("---", i)
 						fmt.Println(o)
 						fmt.Println()
@@ -217,7 +217,7 @@ func TestBuildObjectFromStruct(t *testing.T) {
 
 				for i, obj_expected := range data.expected {
 
-					obj_resp := data.module.Objects[i]
+					obj_resp := data.module.GetObjects()[i]
 
 					if !object.AreIdentical(obj_resp, obj_expected) {
 

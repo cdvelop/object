@@ -2,6 +2,7 @@ package object
 
 import (
 	"github.com/cdvelop/model"
+	"github.com/cdvelop/structs"
 )
 
 var object_fields []string
@@ -10,7 +11,7 @@ var handlers_fields []string
 
 func knownName(name string) bool {
 	if handlers != nil && len(handlers_fields) == 0 {
-		names := model.GetFieldNamesFrom(model.MainHandler{})
+		names := structs.GetFieldNames(model.MainHandler{})
 		names = append(names, "MainHandler")
 		handlers_fields = names
 	}
@@ -22,7 +23,7 @@ func knownName(name string) bool {
 	}
 
 	if len(object_fields) == 0 {
-		object_fields = model.GetFieldNamesFrom(model.Object{})
+		object_fields = structs.GetFieldNames(model.Object{})
 		object_fields = append(object_fields, "Object")
 		object_fields = append(object_fields, "O")
 		// fmt.Println("object_fields", object_fields)
@@ -36,7 +37,7 @@ func knownName(name string) bool {
 		}
 	}
 	if len(module_fields) == 0 {
-		module_fields = model.GetFieldNamesFrom(model.Module{})
+		module_fields = structs.GetFieldNames(model.Module{})
 		module_fields = append(module_fields, "Module")
 		// fmt.Println("module_fields", module_fields)
 	}
