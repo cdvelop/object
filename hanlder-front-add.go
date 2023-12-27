@@ -10,38 +10,38 @@ func addFrontHandlers(o *model.Object, new_struct interface{}) {
 	// 	o.StoreData = new_struct.(model.StoreData)
 	// }
 
-	if _, ok := new_struct.(model.AfterCreate); ok {
+	if h, ok := new_struct.(model.AfterCreate); ok {
 		// fmt.Println("ESTRUCTURA", o.ObjectName, "CONTIENE FrontendHandler AfterCreate")
-		o.FrontHandler.AfterCreate = new_struct.(model.AfterCreate)
+		o.FrontHandler.AfterCreate = h
 	}
-	if _, ok := new_struct.(model.AfterUpdate); ok {
+	if h, ok := new_struct.(model.AfterUpdate); ok {
 		// fmt.Println("ESTRUCTURA", o.ObjectName, "CONTIENE FrontendHandler AfterUpdate")
-		o.FrontHandler.AfterUpdate = new_struct.(model.AfterUpdate)
+		o.FrontHandler.AfterUpdate = h
 	}
-	if _, ok := new_struct.(model.AfterDelete); ok {
+	if h, ok := new_struct.(model.AfterDelete); ok {
 		// fmt.Println("ESTRUCTURA", o.ObjectName, "CONTIENE FrontendHandler AfterDelete")
-		o.FrontHandler.AfterDelete = new_struct.(model.AfterDelete)
+		o.FrontHandler.AfterDelete = h
 	}
 
-	if _, ok := new_struct.(model.AfterClicked); ok {
+	if h, ok := new_struct.(model.AfterClicked); ok {
 		// fmt.Println("ESTRUCTURA", o.ObjectName, "CONTIENE FrontendHandler AfterClicked")
-		o.FrontHandler.AfterClicked = new_struct.(model.AfterClicked)
+		o.FrontHandler.AfterClicked = h
 	}
 
-	if _, ok := new_struct.(model.NotifyBootData); ok {
-		o.FrontHandler.NotifyBootData = new_struct.(model.NotifyBootData)
+	if h, ok := new_struct.(model.NotifyBootData); ok {
+		o.FrontHandler.NotifyBootData = h
 	}
 
-	if _, ok := new_struct.(model.ResetFrontendObjectStateAdapter); ok {
-		o.FrontHandler.ResetFrontendObjectStateAdapter = new_struct.(model.ResetFrontendObjectStateAdapter)
+	if h, ok := new_struct.(model.ResetFrontendObjectStateAdapter); ok {
+		o.FrontHandler.ResetFrontendObjectStateAdapter = h
 	}
 
-	if _, ok := new_struct.(model.ObjectViewHandler); ok {
-		o.FrontHandler.ObjectViewHandler = new_struct.(model.ObjectViewHandler)
+	if h, ok := new_struct.(model.ObjectViewHandler); ok {
+		o.FrontHandler.ObjectViewHandler = h
 	}
 
-	if _, ok := new_struct.(model.NotifyFormComplete); ok {
-		o.FrontHandler.NotifyFormComplete = new_struct.(model.NotifyFormComplete)
+	if h, ok := new_struct.(model.FormNotify); ok {
+		o.FrontHandler.FormNotify = h
 	}
 
 }
