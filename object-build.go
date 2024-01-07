@@ -34,8 +34,6 @@ func (sf *structFound) buildObject(module *model.Module) (o *model.Object, err s
 
 	addBackHandlers(sf.o, sf.struct_int)
 
-	addBasicHandlers(sf.o, sf.struct_int)
-
 	if module != nil {
 		module.AddObjectsToModule(sf.o)
 	}
