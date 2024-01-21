@@ -7,7 +7,7 @@ require (
 	github.com/cdvelop/model v0.0.119
 	github.com/cdvelop/strings v0.0.9
 	github.com/cdvelop/structs v0.0.1
-	github.com/cdvelop/unixid v0.0.49
+	github.com/cdvelop/unixid v0.0.50
 )
 
-require github.com/cdvelop/timetools v0.0.38 // indirect
+require github.com/cdvelop/timetools v0.0.39 // indirect
