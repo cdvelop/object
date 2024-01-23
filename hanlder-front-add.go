@@ -23,9 +23,9 @@ func addFrontHandlers(o *model.Object, new_struct interface{}) {
 		o.FrontHandler.AfterDelete = h
 	}
 
-	if h, ok := new_struct.(model.AfterClicked); ok {
-		// fmt.Println("ESTRUCTURA", o.ObjectName, "CONTIENE FrontendHandler AfterClicked")
-		o.FrontHandler.AfterClicked = h
+	if h, ok := new_struct.(model.AfterClickNotify); ok {
+		// fmt.Println("ESTRUCTURA", o.ObjectName, "CONTIENE FrontendHandler AfterClickNotify")
+		o.FrontHandler.AfterClickNotify = h
 	}
 
 	if h, ok := new_struct.(model.NotifyBootData); ok {
